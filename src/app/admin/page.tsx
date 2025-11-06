@@ -799,19 +799,10 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
 
   return (
     <div className='space-y-6'>
-      {/* 用户统计 */}
+      {/* 用户统计（选项卡：个人/全局） */}
       <div>
-        <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-3'>
-          用户统计
-        </h4>
-        <div className='p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800'>
-          <div className='text-2xl font-bold text-green-800 dark:text-green-300'>
-            {config.UserConfig.Users.length}
-          </div>
-          <div className='text-sm text-green-600 dark:text-green-400'>
-            总用户数
-          </div>
-        </div>
+        <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-3'>用户统计</h4>
+        <StatTabs />
       </div>
 
 
@@ -846,6 +837,9 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
                 </th>
                 <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
                   可用视频源
+                </th>
+                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                  功能权限
                 </th>
                 <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
                   操作
@@ -1227,6 +1221,38 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
                                   配置
                                 </button>
                               )}
+                          </div>
+                        </td>
+                        <td className='px-6 py-4 whitespace-nowrap'>
+                          {/* 功能权限开关 */}
+                          <div className='flex flex-wrap gap-2 items-center'>
+                            {['canAI','canYouTube','canIPTV','canPanSou','canShortDrama'].map((key) => {
+                              const labelMap: Record<string,string> = { canAI: 'AI', canYouTube: 'YouTube', canIPTV: 'IPTV', canPanSou: 'PanSou', canShortDrama: '短剧' };
+                              const val = (user as any).permissions?.[key] ?? false;
+                              const canToggle = role === 'owner' || (role === 'admin' && (user.role === 'user' || user.username === currentUsername));
+                              return (
+                                <button
+                                  key={key}
+                                  disabled={!canToggle}
+                                  onClick={async ()=>{
+                                    if (!canToggle) return;
+                                    await withLoading(`perm_${user.username}_${key}`, async ()=>{
+                                      const res = await fetch('/api/admin/user', {
+                                        method: 'POST', headers: { 'Content-Type':'application/json' },
+                                        body: JSON.stringify({ action: 'updatePermissions', targetUsername: user.username, permissions: { [key]: !val } })
+                                      });
+                                      if (!res.ok) {
+                                        const data = await res.json().catch(()=>({}));
+                                        showError(data.error || '更新失败', showAlert);
+                                      } else {
+                                        await refreshConfig();
+                                      }
+                                    });
+                                  }}
+                                  className={`px-2 py-1 text-xs rounded-full ${val? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300':'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+                                >{labelMap[key]} {val? '✓':'×'}</button>
+                              );
+                            })}
                           </div>
                         </td>
                         <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2'>
@@ -2036,6 +2062,66 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
       />
 
 
+    </div>
+  );
+}
+
+// 简易统计选项卡组件
+function StatTabs() {
+  const [active, setActive] = useState<'user'|'global'>('user');
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/stats/play?scope=${active}`);
+      const json = await res.json();
+      setData(json);
+    } catch {
+      setData(null);
+    } finally { setLoading(false); }
+  };
+  useEffect(()=>{ fetchData(); }, [active]);
+  return (
+    <div className='border border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+      <div className='flex gap-2 mb-3'>
+        <button className={`px-3 py-1 rounded-full ${active==='user'?'bg-green-600 text-white':'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`} onClick={()=>setActive('user')}>个人</button>
+        <button className={`px-3 py-1 rounded-full ${active==='global'?'bg-green-600 text-white':'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`} onClick={()=>setActive('global')}>全局</button>
+      </div>
+      {loading && <div className='text-sm text-gray-500 dark:text-gray-400'>加载中...</div>}
+      {!loading && data && data.ok && (
+        <div className='space-y-3'>
+          <div className='grid grid-cols-3 gap-3'>
+            <div className='p-3 rounded bg-gray-50 dark:bg-gray-900/40'>
+              <div className='text-xs text-gray-500 dark:text-gray-400'>总播放次数</div>
+              <div className='text-lg font-semibold text-gray-800 dark:text-gray-100'>{data.totalPlays}</div>
+            </div>
+            <div className='p-3 rounded bg-gray-50 dark:bg-gray-900/40'>
+              <div className='text-xs text-gray-500 dark:text-gray-400'>总时长(秒)</div>
+              <div className='text-lg font-semibold text-gray-800 dark:text-gray-100'>{data.totalTime}</div>
+            </div>
+            <div className='p-3 rounded bg-gray-50 dark:bg-gray-900/40'>
+              <div className='text-xs text-gray-500 dark:text-gray-400'>总进度(秒)</div>
+              <div className='text-lg font-semibold text-gray-800 dark:text-gray-100'>{data.totalProgress}</div>
+            </div>
+          </div>
+          <div>
+            <div className='text-xs text-gray-500 dark:text-gray-400 mb-1'>Top 标题</div>
+            <div className='space-y-1'>
+              {(data.topTitles||[]).map((t:any,i:number)=> (
+                <div key={i} className='flex items-center gap-2'>
+                  <span className='text-[11px] text-gray-500 dark:text-gray-400 truncate max-w-[12rem]'>{t.title}</span>
+                  <div className='flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded'><div className='h-2 rounded bg-green-500' style={{ width: `${Math.min(100, (t.count||0)/((data.topTitles[0]?.count)||1)*100)}%` }} /></div>
+                  <span className='text-[11px] text-gray-500 dark:text-gray-400'>{t.count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {!loading && (!data || !data.ok) && (
+        <div className='text-sm text-red-500'>统计拉取失败</div>
+      )}
     </div>
   );
 }

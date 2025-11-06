@@ -21,6 +21,7 @@ const ACTIONS = [
   'userGroup',
   'updateUserGroups',
   'batchUpdateUserGroups',
+  'updatePermissions',
 ] as const;
 
 export async function POST(request: NextRequest) {
@@ -328,6 +329,29 @@ export async function POST(request: NextRequest) {
           delete targetEntry.enabledApis;
         }
 
+        break;
+      }
+      case 'updatePermissions': {
+        if (!targetEntry) {
+          return NextResponse.json(
+            { error: '目标用户不存在' },
+            { status: 404 }
+          );
+        }
+        const { permissions } = body as { permissions?: { canAI?: boolean; canYouTube?: boolean; canIPTV?: boolean; canPanSou?: boolean; canShortDrama?: boolean } };
+        if (
+          isTargetAdmin &&
+          operatorRole !== 'owner' &&
+          username !== targetUsername
+        ) {
+          return NextResponse.json({ error: '仅站长可配置其他管理员的功能权限' }, { status: 401 });
+        }
+        if (permissions) {
+          targetEntry.permissions = {
+            ...(targetEntry.permissions || {}),
+            ...permissions,
+          };
+        }
         break;
       }
       case 'userGroup': {
