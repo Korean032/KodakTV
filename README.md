@@ -99,7 +99,7 @@
 ```yml
 services:
   kodaktv-core:
-    image: ghcr.io/moontechlab/kodaktv:latest
+    image: ghcr.io/korean032/kodaktv:latest
     container_name: kodaktv-core
     restart: on-failure
     ports:
@@ -133,7 +133,7 @@ volumes:
 ```yml
 services:
   kodaktv-core:
-    image: ghcr.io/moontechlab/kodaktv:latest
+    image: ghcr.io/korean032/kodaktv:latest
     container_name: kodaktv-core
     restart: on-failure
     ports:
@@ -170,7 +170,7 @@ networks:
 ```yml
 services:
   kodaktv-core:
-    image: ghcr.io/moontechlab/kodaktv:latest
+    image: ghcr.io/korean032/kodaktv:latest
     container_name: kodaktv-core
     restart: on-failure
     ports:
@@ -403,7 +403,6 @@ IPTV_LOGO_PROXY=https://logo-proxy.example/logo?url=
 ```
 
 说明：
-
 - `NEXT_PUBLIC_ENABLE_*` 为前端开关，控制是否在界面/路由层启用 Provider。
 - 具体 Provider 的实现按需逐步完善；未提供必需变量时将使用占位实现或禁用该 Provider。
 
