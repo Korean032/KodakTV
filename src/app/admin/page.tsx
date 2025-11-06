@@ -282,6 +282,12 @@ interface SiteConfig {
   AIAPIBase?: string;
   AIAPIPath?: string;
   OpenAIKey?: string;
+  AzureOpenAIEndpoint?: string;
+  AzureOpenAIDeployment?: string;
+  AzureOpenAIApiVersion?: string;
+  AIEnableRateLimit?: boolean;
+  AIRetryMaxAttempts?: number;
+  AIRetryDelayMs?: number;
 }
 
 // 视频源数据类型
