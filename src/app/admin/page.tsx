@@ -3561,6 +3561,14 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
     FluidSearch: true,
   });
 
+  // AI 测试历史（展示耗时与状态）
+  const [aiTestHistory, setAiTestHistory] = useState<{ ts: number; status: number; ms: number; items: number }[]>(() => {
+    if (typeof window !== 'undefined') {
+      try { return JSON.parse(localStorage.getItem('ai_test_history') || '[]'); } catch { /* ignore */ }
+    }
+    return [];
+  });
+
   // 豆瓣数据源相关状态
   const [isDoubanDropdownOpen, setIsDoubanDropdownOpen] = useState(false);
   const [isDoubanImageProxyDropdownOpen, setIsDoubanImageProxyDropdownOpen] =
