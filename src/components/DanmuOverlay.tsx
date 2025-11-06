@@ -66,9 +66,18 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
 
   // 初始化与使用 Web Worker 计算弹幕轨道分配
   useEffect(() => {
+    // 兼容 CommonJS 构建：使用 Blob 内联创建 Worker
+    function makeLaneWorker(): Worker {
+      const code = `/* lane worker */\nself.onmessage = function(e){\n  try {\n    var payload = e.data || {};\n    var width = payload.width || 1280;\n    var height = payload.height || 720;\n    var items = payload.items || [];\n    var laneCount = Math.max(3, Math.floor(height / 32));\n    var lanes = new Array(laneCount).fill(0);\n    var out = [];\n    for (var i=0;i<items.length;i++){\n      var chosen = 0;\n      for (var l=0;l<laneCount;l++){ if (lanes[l] <= 0) { chosen = l; break; } }\n      out[i] = { lane: chosen };\n      var txt = String(items[i].text || '');\n      var estWidth = Math.min(width * 0.6, Math.max(80, txt.length * 12));\n      var speed = Math.max(50, Number(items[i].speed)||120);\n      var duration = (width + estWidth) / speed;\n      lanes[chosen] = duration * 60;\n      for (var k=0;k<laneCount;k++){ lanes[k] = Math.max(0, lanes[k] - 30); }\n    }\n    self.postMessage({ ok: true, positions: out });\n  } catch (err) {\n    self.postMessage({ ok: false, error: (err && err.message) || 'worker_error' });\n  }\n};`;
+      const blob = new Blob([code], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      const w = new Worker(url);
+      // @ts-expect-error custom property for cleanup
+      w.__blobURL = url;
+      return w;
+    }
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const w = new Worker(new URL('../workers/danmu.worker.ts', import.meta.url));
+      const w = makeLaneWorker();
       workerRef.current = w;
       const overlay = overlayRef.current;
       const width = overlay?.clientWidth || 1280;
@@ -81,7 +90,14 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
       };
       const payload = { width, height, items: (items||[]).map((it)=>({ time: it.time, text: it.text, speed: settings.speed*120 })) };
       w.postMessage(payload);
-      return () => { w.terminate(); workerRef.current = null; };
+      return () => {
+        try {
+          w.terminate();
+          // @ts-expect-error custom property
+          if (w.__blobURL) URL.revokeObjectURL(w.__blobURL);
+        } catch {};
+        workerRef.current = null;
+      };
     } catch {
       // ignore worker failures; fallback到主线程
     }
