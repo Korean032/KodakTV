@@ -91,6 +91,7 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
   function spawnDanmu(d: DanmuItem) {
     const overlay = overlayRef.current;
     if (!overlay) return;
+    const container = overlay as HTMLDivElement;
     const lane = chooseLane();
     const div = document.createElement('div');
     div.textContent = d.text;
@@ -98,21 +99,24 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
     div.style.whiteSpace = 'nowrap';
     div.style.pointerEvents = 'none';
     div.style.top = `${lane * (settings.fontSize + 8)}px`;
-    div.style.left = `${overlay.clientWidth + 10}px`;
+    div.style.left = `${container.clientWidth + 10}px`;
     div.style.fontSize = `${settings.fontSize}px`;
     div.style.opacity = String(settings.opacity);
     div.style.color = d.color || '#ffffff';
-    overlay.appendChild(div);
-    const distance = overlay.clientWidth + div.clientWidth + 20;
+    container.appendChild(div);
+    const distance = container.clientWidth + div.clientWidth + 20;
     const duration = (distance / (120 * settings.speed)) * (perf==='high'?0.8:perf==='mid'?1:1.2);
     const start = performance.now();
     laneBusyRef.current[lane] = Date.now() + duration * 1000 * (settings.antiOverlap ? 1 : 0.5);
     function tick(now: number) {
       const t = Math.min(1, (now - start) / (duration * 1000));
-      const x = overlay.clientWidth + 10 - t * distance;
+      const x = container.clientWidth + 10 - t * distance;
       div.style.transform = `translateX(${x}px)`;
-      if (t < 1 && mountedRef.current) requestAnimationFrame(tick);
-      else overlay.removeChild(div);
+      if (t < 1 && mountedRef.current) {
+        requestAnimationFrame(tick);
+      } else {
+        if (container.contains(div)) container.removeChild(div);
+      }
     }
     requestAnimationFrame(tick);
   }
