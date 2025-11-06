@@ -22,6 +22,31 @@ async function getAiConfig() {
   }
 }
 
+function getAiEndpoint(apiKey: string) {
+  const provider = (process.env.AI_PROVIDER || 'openai').toLowerCase();
+  if (provider === 'azure') {
+    const endpoint = process.env.AZURE_OPENAI_ENDPOINT || '';
+    const deployment = process.env.AZURE_OPENAI_DEPLOYMENT || '';
+    const apiVersion = process.env.AZURE_OPENAI_API_VERSION || '2024-02-01';
+    const url = `${endpoint.replace(/\/$/, '')}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'api-key': apiKey,
+    };
+    return { url, headers };
+  } else {
+    // OpenAI 兼容接口（OpenAI、OpenRouter、Groq、Together 等）
+    const base = (process.env.AI_API_BASE || 'https://api.openai.com/v1').replace(/\/$/, '');
+    const path = process.env.AI_API_PATH || '/chat/completions';
+    const url = `${base}${path}`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    };
+    return { url, headers };
+  }
+}
+
 const AiProvider: Provider = {
   key: 'ai',
   name: 'AI Recommend',
@@ -43,12 +68,10 @@ const AiProvider: Provider = {
     } as any;
 
     try {
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      const { url, headers } = getAiEndpoint(apiKey);
+      const res = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
+        headers,
         body: JSON.stringify(body),
       });
       if (!res.ok) {

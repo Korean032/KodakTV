@@ -407,6 +407,16 @@ IPTV_LOGO_PROXY=https://logo-proxy.example/logo?url=
 OPENAI_API_KEY=sk-xxxx
 AI_MODEL=gpt-4o-mini
 AI_SYSTEM_PROMPT=你是一个影视推荐助手，只返回JSON数组。
+# 可配置更多AI接口
+# OpenAI 兼容接口（OpenAI / OpenRouter / Groq / Together 等）
+AI_PROVIDER=openai           # 或 compatible
+AI_API_BASE=https://api.openai.com/v1   # 如 https://openrouter.ai/api/v1 或 https://api.groq.com/openai/v1
+AI_API_PATH=/chat/completions
+
+# Azure OpenAI（与上面二选一）
+AZURE_OPENAI_ENDPOINT=https://<your-resource>.openai.azure.com
+AZURE_OPENAI_DEPLOYMENT=<deployment-name>
+AZURE_OPENAI_API_VERSION=2024-02-01
 
 # TMDB（演员搜索与发布日历）
 TMDB_API_KEY=xxxx
@@ -418,6 +428,10 @@ TMDB_REGION=CN
 - `NEXT_PUBLIC_ENABLE_*` 为前端开关，控制是否在界面/路由层启用 Provider。
 - 具体 Provider 的实现按需逐步完善；未提供必需变量时将使用占位实现或禁用该 Provider。
 - AI 与 TMDB 需要对应密钥；发布日历支持 `week=this|next` 查询，推荐页支持自定义提示词与类型（movie/youtube/link）。
+- AI 接口说明：
+  - 默认走 OpenAI：`AI_PROVIDER=openai`，使用 `OPENAI_API_KEY`，请求 `https://api.openai.com/v1/chat/completions`
+  - 兼容接口：设置 `AI_API_BASE`/`AI_API_PATH`，例如 OpenRouter（`https://openrouter.ai/api/v1`）、Groq（`https://api.groq.com/openai/v1`），仍用 `Authorization: Bearer <key>`
+  - Azure OpenAI：设置 `AI_PROVIDER=azure` 并提供 `AZURE_OPENAI_*`，认证头为 `api-key`，路径为 `.../openai/deployments/<dep>/chat/completions?api-version=...`
 
 ## 客户端
 
