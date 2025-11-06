@@ -52,6 +52,12 @@ export async function POST(request: NextRequest) {
       AIAPIBase,
       AIAPIPath,
       OpenAIKey,
+      AzureOpenAIEndpoint,
+      AzureOpenAIDeployment,
+      AzureOpenAIApiVersion,
+      AIEnableRateLimit,
+      AIRetryMaxAttempts,
+      AIRetryDelayMs,
     } = body as {
       SiteName: string;
       Announcement: string;
@@ -76,6 +82,12 @@ export async function POST(request: NextRequest) {
       AIAPIBase?: string;
       AIAPIPath?: string;
       OpenAIKey?: string;
+      AzureOpenAIEndpoint?: string;
+      AzureOpenAIDeployment?: string;
+      AzureOpenAIApiVersion?: string;
+      AIEnableRateLimit?: boolean;
+      AIRetryMaxAttempts?: number;
+      AIRetryDelayMs?: number;
     };
 
     // 参数校验
@@ -103,6 +115,12 @@ export async function POST(request: NextRequest) {
       || (AIAPIBase !== undefined && typeof AIAPIBase !== 'string')
       || (AIAPIPath !== undefined && typeof AIAPIPath !== 'string')
       || (OpenAIKey !== undefined && typeof OpenAIKey !== 'string')
+      || (AzureOpenAIEndpoint !== undefined && typeof AzureOpenAIEndpoint !== 'string')
+      || (AzureOpenAIDeployment !== undefined && typeof AzureOpenAIDeployment !== 'string')
+      || (AzureOpenAIApiVersion !== undefined && typeof AzureOpenAIApiVersion !== 'string')
+      || (AIEnableRateLimit !== undefined && typeof AIEnableRateLimit !== 'boolean')
+      || (AIRetryMaxAttempts !== undefined && typeof AIRetryMaxAttempts !== 'number')
+      || (AIRetryDelayMs !== undefined && typeof AIRetryDelayMs !== 'number')
     ) {
       return NextResponse.json({ error: '参数格式错误' }, { status: 400 });
     }
@@ -145,6 +163,12 @@ export async function POST(request: NextRequest) {
       AIAPIBase: AIAPIBase ?? adminConfig.SiteConfig.AIAPIBase ?? '',
       AIAPIPath: AIAPIPath ?? adminConfig.SiteConfig.AIAPIPath ?? '',
       OpenAIKey: OpenAIKey ?? adminConfig.SiteConfig.OpenAIKey ?? '',
+      AzureOpenAIEndpoint: AzureOpenAIEndpoint ?? adminConfig.SiteConfig.AzureOpenAIEndpoint ?? '',
+      AzureOpenAIDeployment: AzureOpenAIDeployment ?? adminConfig.SiteConfig.AzureOpenAIDeployment ?? '',
+      AzureOpenAIApiVersion: AzureOpenAIApiVersion ?? adminConfig.SiteConfig.AzureOpenAIApiVersion ?? '',
+      AIEnableRateLimit: AIEnableRateLimit ?? adminConfig.SiteConfig.AIEnableRateLimit ?? false,
+      AIRetryMaxAttempts: AIRetryMaxAttempts ?? adminConfig.SiteConfig.AIRetryMaxAttempts ?? 2,
+      AIRetryDelayMs: AIRetryDelayMs ?? adminConfig.SiteConfig.AIRetryDelayMs ?? 500,
     };
 
     // 写入数据库

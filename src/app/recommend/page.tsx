@@ -37,6 +37,7 @@ export default function RecommendPage() {
   const [userPrompt, setUserPrompt] = useState('热门');
   const [style, setStyle] = useState<'movie' | 'youtube' | 'link'>('movie');
   const [aiItems, setAiItems] = useState<any[]>([]);
+  const [aiInfo, setAiInfo] = useState<string>('');
   const [ytItems, setYtItems] = useState<any[]>([]);
   const [calendarItems, setCalendarItems] = useState<any[]>([]);
   const [week, setWeek] = useState<'this'|'next'>('this');
@@ -52,8 +53,22 @@ export default function RecommendPage() {
       const res = await fetch(`/api/providers/ai/search?q=${encodeURIComponent(userPrompt)}&type=${style}`);
       const data = await res.json();
       setAiItems(Array.isArray(data.items) ? data.items : []);
+      if (!Array.isArray(data.items) || data.items.length === 0) {
+        try {
+          const t = await fetch('/api/admin/ai/test', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userPrompt, type: style })
+          });
+          const tj = await t.json().catch(()=>({}));
+          if (tj && tj.status) setAiInfo(`测试: status=${tj.status}, items=${tj.itemsCount||0}, ms=${tj.ms||'-'}`);
+          else setAiInfo('测试失败：请检查后台AI配置');
+        } catch { setAiInfo('测试失败：请检查后台AI配置'); }
+      } else {
+        setAiInfo('');
+      }
     } catch {
       setAiItems([]);
+      setAiInfo('请求失败：请检查网络或AI配置');
     } finally {
       setLoading(false);
     }
@@ -122,7 +137,7 @@ export default function RecommendPage() {
             </div>
           ))}
           {items.length === 0 && !loading && (
-            <div className='text-sm text-gray-500 dark:text-gray-400 px-3'>暂无数据</div>
+            <div className='text-sm text-gray-500 dark:text-gray-400 px-3'>暂无数据 {aiInfo && `（${aiInfo}）`}</div>
           )}
         </ScrollableRow>
       );

@@ -29,6 +29,12 @@ export interface AdminConfig {
     AIAPIBase?: string;
     AIAPIPath?: string;
     OpenAIKey?: string;
+    AzureOpenAIEndpoint?: string;
+    AzureOpenAIDeployment?: string;
+    AzureOpenAIApiVersion?: string;
+    AIEnableRateLimit?: boolean;
+    AIRetryMaxAttempts?: number;
+    AIRetryDelayMs?: number;
   };
   UserConfig: {
     Users: {

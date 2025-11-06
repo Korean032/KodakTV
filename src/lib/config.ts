@@ -234,6 +234,12 @@ async function getInitConfig(configFile: string, subConfig: {
       AIAPIBase: process.env.AI_API_BASE || '',
       AIAPIPath: process.env.AI_API_PATH || '',
       OpenAIKey: process.env.OPENAI_API_KEY || process.env.OAI_API_KEY || '',
+      AzureOpenAIEndpoint: process.env.AZURE_OPENAI_ENDPOINT || '',
+      AzureOpenAIDeployment: process.env.AZURE_OPENAI_DEPLOYMENT || '',
+      AzureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION || '',
+      AIEnableRateLimit: process.env.AI_ENABLE_RATE_LIMIT === 'true',
+      AIRetryMaxAttempts: Number(process.env.AI_RETRY_MAX_ATTEMPTS || 2),
+      AIRetryDelayMs: Number(process.env.AI_RETRY_DELAY_MS || 500),
     },
     UserConfig: {
       Users: [],

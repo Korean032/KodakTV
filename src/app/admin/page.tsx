@@ -4157,19 +4157,46 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
                       path: siteSettings.AIAPIPath,
                       model: siteSettings.AIModel,
                       systemPrompt: siteSettings.AISystemPrompt,
+                      azureEndpoint: siteSettings.AzureOpenAIEndpoint,
+                      azureDeployment: siteSettings.AzureOpenAIDeployment,
+                      azureApiVersion: siteSettings.AzureOpenAIApiVersion,
+                      retryMaxAttempts: siteSettings.AIRetryMaxAttempts,
+                      retryDelayMs: siteSettings.AIRetryDelayMs,
                       prompt: '热门',
                       type: 'movie',
                     }),
                   });
                   const data = await resp.json();
                   if (!resp.ok || !data.ok) throw new Error(data.error || `测试失败: ${resp.status}`);
-                  showSuccess(`测试成功（${data.itemsCount} 条）`, showAlert);
+                  showSuccess(`测试成功（${data.itemsCount} 条，${data.ms}ms）`, showAlert);
+                  setAiTestHistory((prev)=>{
+                    const next = [...prev, { ts: Date.now(), status: data.status, ms: data.ms, items: data.itemsCount }].slice(-20);
+                    if (typeof window !== 'undefined') localStorage.setItem('ai_test_history', JSON.stringify(next));
+                    return next;
+                  });
                 } catch (err) {
                   showError(err instanceof Error ? err.message : '测试失败', showAlert);
                 }
               });
             }}
           >在线测试</button>
+        </div>
+        {/* 测试历史（简易耗时曲线） */}
+        <div className='mt-3'>
+          <div className='text-xs text-gray-500 dark:text-gray-400 mb-1'>最近测试</div>
+          <div className='space-y-1'>
+            {aiTestHistory.map((h, i)=> (
+              <div key={i} className='flex items-center gap-2'>
+                <span className='text-[11px] text-gray-500 dark:text-gray-400'>{new Date(h.ts).toLocaleTimeString()}</span>
+                <div className='flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded'>
+                  <div className={`h-2 rounded ${h.items>0? 'bg-green-500':'bg-red-400'}`} style={{ width: `${Math.min(100, h.ms/2000*100)}%` }} />
+                </div>
+                <span className='text-[11px] text-gray-500 dark:text-gray-400'>{h.ms}ms</span>
+                <span className='text-[11px] text-gray-500 dark:text-gray-400'>#{h.status}</span>
+                <span className='text-[11px] text-gray-500 dark:text-gray-400'>{h.items}条</span>
+              </div>
+            ))}
+          </div>
         </div>
         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>开启后将在界面与路由层启用对应 Provider（YouTube、网盘、短剧、IPTV、Bangumi）。</p>
       </div>

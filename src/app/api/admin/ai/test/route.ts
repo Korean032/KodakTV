@@ -41,6 +41,9 @@ export async function POST(req: NextRequest) {
       azureApiVersion,
       prompt = '热门',
       type = 'movie',
+      enableRateLimit,
+      retryMaxAttempts,
+      retryDelayMs,
     } = body as Record<string, any>;
 
     if (!apiKey) return NextResponse.json({ ok: false, error: '缺少 apiKey' }, { status: 400 });
@@ -60,9 +63,16 @@ export async function POST(req: NextRequest) {
       temperature: 0.7,
     };
 
+    const started = Date.now();
     let resp = await fetch(url, { method: 'POST', headers, body: JSON.stringify({ ...payload, response_format: { type: 'json_object' } }) });
     if (!resp.ok) {
-      resp = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+      const maxAttempts = Number(retryMaxAttempts || 2);
+      const delayMs = Number(retryDelayMs || 500);
+      for (let i = 0; i < maxAttempts; i++) {
+        await new Promise((r) => setTimeout(r, delayMs));
+        resp = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+        if (resp.ok) break;
+      }
     }
     const json = await resp.json().catch(() => ({}));
     const text = json?.choices?.[0]?.message?.content || '';
@@ -74,7 +84,8 @@ export async function POST(req: NextRequest) {
       const match = text?.match(/\[\s*{[\s\S]*}\s*\]/);
       items = match ? JSON.parse(match[0]) : [];
     }
-    return NextResponse.json({ ok: true, status: resp.status, itemsCount: items.length });
+    const elapsed = Date.now() - started;
+    return NextResponse.json({ ok: true, status: resp.status, itemsCount: items.length, ms: elapsed });
   } catch (e) {
     return NextResponse.json({ ok: false, error: (e as Error).message }, { status: 500 });
   }
