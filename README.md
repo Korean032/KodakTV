@@ -374,6 +374,39 @@ NEXT_PUBLIC_DOUBAN_IMAGE_PROXY_TYPE 选项解释：
 - cmliussss-cdn-ali：由浏览器请求豆瓣 CDN，该 CDN 由 [CMLiussss](https://github.com/cmliu) 搭建，并由阿里云 cdn 提供加速
 - custom: 用户自定义 proxy，由 NEXT_PUBLIC_DOUBAN_IMAGE_PROXY 定义
 
+### 内容生态扩展（可选）
+
+为后续的生态集成（YouTube、PanSou 网盘、短剧、IPTV、Bangumi）预留的环境变量与开关。未设置时，对应 Provider 将保持占位或禁用，不影响正常运行。
+
+```env
+# 功能开关
+NEXT_PUBLIC_ENABLE_YOUTUBE=true
+NEXT_PUBLIC_ENABLE_PANSOU=true
+NEXT_PUBLIC_ENABLE_SHORTDRAMA=true
+NEXT_PUBLIC_ENABLE_IPTV=true
+NEXT_PUBLIC_ENABLE_BANGUMI=true
+
+# YouTube（服务端搜索与无 Cookie 嵌入播放）
+YOUTUBE_API_KEY=xxxx
+YOUTUBE_EMBED_DOMAIN=www.youtube-nocookie.com
+
+# PanSou 网盘（占位，需接入合法 API 或自建爬虫）
+PANSOU_BASE_URL=https://www.pansou.com
+
+# 短剧（移动端 API 与代理）
+SHORTDRAMA_API_BASE=https://api.shortdrama.example
+MOBILE_PROXY_BASE=https://proxy.example/fetch?url=
+
+# IPTV（多源 EPG 与台标代理）
+IPTV_EPG_SOURCES=https://epg1.xml,https://epg2.xml
+IPTV_LOGO_PROXY=https://logo-proxy.example/logo?url=
+```
+
+说明：
+
+- `NEXT_PUBLIC_ENABLE_*` 为前端开关，控制是否在界面/路由层启用 Provider。
+- 具体 Provider 的实现按需逐步完善；未提供必需变量时将使用占位实现或禁用该 Provider。
+
 ## 客户端
 
 v100.0.0 以上版本可配合 [Selene](https://github.com/MoonTechLab/Selene) 使用，移动端体验更加友好，数据完全同步
