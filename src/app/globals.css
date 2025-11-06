@@ -13,6 +13,60 @@
   }
 }
 
+/* ===== Artplayer Glass Theme ===== */
+.artplayer .art-bottom {
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  padding: 6px 10px;
+}
+.dark .artplayer .art-bottom {
+  background: rgba(17, 24, 39, 0.35);
+  border-color: rgba(75, 85, 99, 0.45);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.artplayer .art-bottom .art-controls > * {
+  border-radius: 9999px;
+}
+
+.artplayer .art-bottom .art-progress {
+  background: rgba(255, 255, 255, 0.25);
+  height: 6px !important;
+  border-radius: 9999px;
+}
+.artplayer .art-bottom .art-progress .art-loaded,
+.artplayer .art-bottom .art-progress .art-played {
+  border-radius: 9999px;
+}
+.artplayer .art-bottom .art-progress .art-played {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+.dark .artplayer .art-bottom .art-progress {
+  background: rgba(55, 65, 81, 0.45);
+}
+
+.artplayer .art-controls .art-control:hover,
+.artplayer .art-controls .art-control:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+.dark .artplayer .art-controls .art-control:hover,
+.dark .artplayer .art-controls .art-control:active {
+  background: rgba(55, 65, 81, 0.6);
+}
+
+.artplayer .art-info {
+  /* tooltip/notice */
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
 :root {
   --foreground-rgb: 255, 255, 255;
 }

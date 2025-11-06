@@ -127,7 +127,7 @@ function LoginPageClient() {
       </div>
       <div className='relative z-10 w-full max-w-md rounded-3xl bg-gradient-to-b from-white/90 via-white/70 to-white/40 dark:from-zinc-900/90 dark:via-zinc-900/70 dark:to-zinc-900/40 backdrop-blur-xl shadow-2xl p-10 dark:border dark:border-zinc-800'>
         <div className='mb-8 flex justify-center'>
-          <div className='inline-flex items-center px-6 py-2 rounded-full bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-zinc-700/40 shadow-md'>
+          <div className='inline-flex items-center px-6 py-2 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
             <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent text-lg sm:text-xl font-semibold tracking-tight'>
               {siteName}
             </span>
@@ -174,7 +174,7 @@ function LoginPageClient() {
           <button
             type='submit'
             disabled={!password || loading || (shouldAskUsername && !username)}
-            className='inline-flex w-full justify-center rounded-full bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-zinc-700/40 text-green-600 py-3 text-base font-semibold shadow-md transition-colors transition-transform duration-200 hover:bg-white/80 dark:hover:bg-zinc-900/70 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50'
+            className='inline-flex w-full justify-center rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 text-green-600 py-3 text-base font-semibold shadow-md transition-colors transition-transform duration-200 hover:bg-white/40 dark:hover:bg-gray-900/50 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50'
           >
             {loading ? '登录中...' : '登录'}
           </button>

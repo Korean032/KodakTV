@@ -336,7 +336,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
           </div>
           <button
             onClick={onClose}
-            className='w-6 h-6 sm:w-8 sm:h-8 p-1 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50 transition-colors'
+            className='w-6 h-6 sm:w-8 sm:h-8 p-1 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50 transition-colors'
             aria-label='关闭'
           >
             <X className='w-full h-full' />

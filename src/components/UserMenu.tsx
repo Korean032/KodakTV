@@ -646,7 +646,7 @@ export const UserMenu: React.FC = () => {
             </div>
             <button
               onClick={handleCloseSettings}
-              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50 transition-colors'
               aria-label='Close'
             >
               <X className='w-full h-full' />
@@ -1024,7 +1024,7 @@ export const UserMenu: React.FC = () => {
             </h3>
             <button
               onClick={handleCloseChangePassword}
-              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50 transition-colors'
+              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50 transition-colors'
               aria-label='Close'
             >
               <X className='w-full h-full' />

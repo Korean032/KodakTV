@@ -192,7 +192,7 @@ function HomeClient() {
             // 收藏夹视图
             <section className='mb-8'>
               <div className='mb-4 flex items-center justify-between'>
-                <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
                   <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent drop-shadow-sm'>
                     我的收藏
                   </span>
@@ -238,14 +238,14 @@ function HomeClient() {
               {/* 热门电影 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
                     <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent drop-shadow-sm'>
                       热门电影
                     </span>
                   </h2>
                   <Link
                     href='/douban?type=movie'
-                    className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 text-sm text-gray-700 dark:text-gray-300 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50'
+                    className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 text-sm text-gray-700 dark:text-gray-300 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />
@@ -288,14 +288,14 @@ function HomeClient() {
               {/* 热门剧集 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
                     <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent drop-shadow-sm'>
                       热门剧集
                     </span>
                   </h2>
                   <Link
                     href='/douban?type=tv'
-                    className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 text-sm text-gray-700 dark:text-gray-300 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50'
+                    className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 text-sm text-gray-700 dark:text-gray-300 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />
@@ -337,7 +337,7 @@ function HomeClient() {
               {/* 每日新番放送 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
                     <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent drop-shadow-sm'>
                       新番放送
                     </span>
@@ -421,7 +421,7 @@ function HomeClient() {
                   </h2>
                   <Link
                     href='/douban?type=show'
-                    className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 text-sm text-gray-700 dark:text-gray-300 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50'
+                    className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 text-sm text-gray-700 dark:text-gray-300 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />

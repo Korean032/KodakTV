@@ -2,7 +2,16 @@
 
 'use client';
 
-import { Cat, Clover, Film, Home, Radio, Search as SearchIcon, Star, Tv } from 'lucide-react';
+import {
+  Cat,
+  Clover,
+  Film,
+  Home,
+  Radio,
+  Search as SearchIcon,
+  Star,
+  Tv,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -59,7 +68,10 @@ const DesktopFloatingNav = ({ activePath }: DesktopFloatingNavProps) => {
         transform: 'translateX(-50%)',
       }}
     >
-      <div className='relative inline-block' style={{ maxWidth: 'min(960px, 90vw)' }}>
+      <div
+        className='relative inline-block'
+        style={{ maxWidth: 'min(960px, 90vw)' }}
+      >
         <nav
           className='
             flex
@@ -70,38 +82,38 @@ const DesktopFloatingNav = ({ activePath }: DesktopFloatingNavProps) => {
           '
         >
           <ul className='flex items-center justify-center gap-3 flex-wrap'>
-          {navItems.map((item) => {
-            const active = isActive(item.href);
-            const Icon = item.icon;
-            return (
-              <li key={item.href} className='flex-shrink-0'>
-                <Link
-                  href={item.href}
-                  className='
+            {navItems.map((item) => {
+              const active = isActive(item.href);
+              const Icon = item.icon;
+              return (
+                <li key={item.href} className='flex-shrink-0'>
+                  <Link
+                    href={item.href}
+                    className='
                     inline-flex items-center gap-2 px-3 py-2
                     rounded-xl transition-colors
                   '
-                >
-                  <Icon
-                    className={`w-5 h-5 ${
-                      active
-                        ? 'text-green-600 dark:text-green-400'
-                        : 'text-gray-600 dark:text-gray-300'
-                      }`}
-                  />
-                  <span
-                    className={
-                      active
-                        ? 'text-green-700 dark:text-green-300'
-                        : 'text-gray-700 dark:text-gray-200'
-                    }
                   >
-                    {item.label}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
+                    <Icon
+                      className={`w-5 h-5 ${
+                        active
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-600 dark:text-gray-300'
+                      }`}
+                    />
+                    <span
+                      className={
+                        active
+                          ? 'text-green-700 dark:text-green-300'
+                          : 'text-gray-700 dark:text-gray-200'
+                      }
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -113,7 +125,7 @@ const DesktopFloatingNav = ({ activePath }: DesktopFloatingNavProps) => {
             absolute -right-14 top-1/2 -translate-y-1/2
             w-12 h-12 rounded-full
             flex items-center justify-center
-            bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl
+            bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl
             border border-gray-200/40 dark:border-gray-700/40
             shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50
             transition-colors
