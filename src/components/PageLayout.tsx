@@ -1,9 +1,11 @@
+"use client";
 import { BackButton } from './BackButton';
 import DesktopFloatingNav from './DesktopFloatingNav';
 import MobileBottomNav from './MobileBottomNav';
 import MobileHeader from './MobileHeader';
 import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
+import { useSite } from './SiteProvider';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -11,6 +13,7 @@ interface PageLayoutProps {
 }
 
 const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
+  const { siteName } = useSite();
   return (
     <div className='w-full min-h-screen'>
       {/* 移动端头部 */}
@@ -24,6 +27,17 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
           {['/play', '/live'].includes(activePath) && (
             <div className='absolute top-3 left-1 z-20 hidden md:flex'>
               <BackButton />
+            </div>
+          )}
+
+          {/* 桌面端顶层品牌胶囊（除首页外） */}
+          {activePath !== '/' && activePath !== '/search' && (
+            <div className='absolute top-2 left-1/2 -translate-x-1/2 z-20 hidden md:flex'>
+              <div className='inline-flex items-center px-6 py-2 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent text-sm sm:text-base font-semibold tracking-tight'>
+                  {siteName}
+                </span>
+              </div>
             </div>
           )}
 
