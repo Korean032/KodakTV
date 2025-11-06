@@ -187,12 +187,13 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
     return (
       <div
         key={entry.version}
-        className={`p-4 rounded-lg border ${isCurrentVersion
-          ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-          : isUpdate
+        className={`p-4 rounded-lg border ${
+          isCurrentVersion
+            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
+            : isUpdate
             ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
             : 'bg-gray-50 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700'
-          }`}
+        }`}
       >
         {/* 版本标题 */}
         <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3'>
@@ -335,7 +336,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
           </div>
           <button
             onClick={onClose}
-            className='w-6 h-6 sm:w-8 sm:h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+            className='w-6 h-6 sm:w-8 sm:h-8 p-1 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 shadow-md hover:bg-white/40 dark:hover:bg-gray-900/50 transition-colors'
             aria-label='关闭'
           >
             <X className='w-full h-full' />
@@ -444,10 +445,11 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                       .map((entry, index) => (
                         <div
                           key={index}
-                          className={`p-4 rounded-lg border ${entry.version === latestVersion
-                            ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
-                            : 'bg-gray-50 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700'
-                            }`}
+                          className={`p-4 rounded-lg border ${
+                            entry.version === latestVersion
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
+                              : 'bg-gray-50 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700'
+                          }`}
                         >
                           <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3'>
                             <div className='flex flex-wrap items-center gap-2'>
