@@ -134,11 +134,18 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
     const actualEpisodes = dynamicEpisodes;
     const actualYear = year;
     const actualQuery = query || '';
-    const actualSearchType = isAggregate
+  const actualSearchType = isAggregate
       ? actualEpisodes && actualEpisodes === 1
         ? 'movie'
         : 'tv'
       : type;
+
+    // 完结状态（基于 remarks 字段）
+    const isFinished = useMemo(() => {
+      const r = (remarks || '').toLowerCase();
+      if (!r) return false;
+      return /完结|全\d+集|已完结/.test(r);
+    }, [remarks]);
 
     // 获取收藏状态（搜索结果页面不检查）
     useEffect(() => {
