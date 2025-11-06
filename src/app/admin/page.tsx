@@ -278,6 +278,10 @@ interface SiteConfig {
   EnableTMDB?: boolean;
   AIModel?: string;
   AISystemPrompt?: string;
+  AIProvider?: string;
+  AIAPIBase?: string;
+  AIAPIPath?: string;
+  OpenAIKey?: string;
 }
 
 // 视频源数据类型
@@ -3534,6 +3538,10 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
         EnableTMDB: config.SiteConfig.EnableTMDB ?? true,
         AIModel: config.SiteConfig.AIModel || '',
         AISystemPrompt: config.SiteConfig.AISystemPrompt || '',
+        AIProvider: config.SiteConfig.AIProvider || 'openai',
+        AIAPIBase: config.SiteConfig.AIAPIBase || '',
+        AIAPIPath: config.SiteConfig.AIAPIPath || '',
+        OpenAIKey: config.SiteConfig.OpenAIKey || '',
       });
     }
   }, [config]);
@@ -4077,6 +4085,50 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
             className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
           />
         </div>
+        {/* AI Provider */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI Provider</label>
+          <input
+            type='text'
+            placeholder='openai / azure / compatible'
+            value={siteSettings.AIProvider || 'openai'}
+            onChange={(e) => setSiteSettings(prev => ({ ...prev, AIProvider: e.target.value }))}
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+          />
+        </div>
+        {/* AI API Base */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI API Base</label>
+          <input
+            type='text'
+            placeholder='例如: https://api.openai.com/v1 或 https://free.v36.cm/v1'
+            value={siteSettings.AIAPIBase || ''}
+            onChange={(e) => setSiteSettings(prev => ({ ...prev, AIAPIBase: e.target.value }))}
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+          />
+        </div>
+        {/* AI API Path */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI API Path</label>
+          <input
+            type='text'
+            placeholder='/chat/completions'
+            value={siteSettings.AIAPIPath || ''}
+            onChange={(e) => setSiteSettings(prev => ({ ...prev, AIAPIPath: e.target.value }))}
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+          />
+        </div>
+        {/* OpenAI Key */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI 密钥</label>
+          <input
+            type='password'
+            placeholder='sk-...'
+            value={siteSettings.OpenAIKey || ''}
+            onChange={(e) => setSiteSettings(prev => ({ ...prev, OpenAIKey: e.target.value }))}
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+          />
+        </div>
         {/* AI System Prompt */}
         <div>
           <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI 系统提示词</label>
@@ -4087,6 +4139,37 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
             onChange={(e) => setSiteSettings(prev => ({ ...prev, AISystemPrompt: e.target.value }))}
             className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
           />
+        </div>
+        {/* 在线测试按钮 */}
+        <div className='flex gap-3'>
+          <button
+            className={buttonStyles.quickAction}
+            onClick={async () => {
+              await withLoading('testAI', async () => {
+                try {
+                  const resp = await fetch('/api/admin/ai/test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      apiKey: siteSettings.OpenAIKey,
+                      provider: siteSettings.AIProvider,
+                      base: siteSettings.AIAPIBase,
+                      path: siteSettings.AIAPIPath,
+                      model: siteSettings.AIModel,
+                      systemPrompt: siteSettings.AISystemPrompt,
+                      prompt: '热门',
+                      type: 'movie',
+                    }),
+                  });
+                  const data = await resp.json();
+                  if (!resp.ok || !data.ok) throw new Error(data.error || `测试失败: ${resp.status}`);
+                  showSuccess(`测试成功（${data.itemsCount} 条）`, showAlert);
+                } catch (err) {
+                  showError(err instanceof Error ? err.message : '测试失败', showAlert);
+                }
+              });
+            }}
+          >在线测试</button>
         </div>
         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>开启后将在界面与路由层启用对应 Provider（YouTube、网盘、短剧、IPTV、Bangumi）。</p>
       </div>

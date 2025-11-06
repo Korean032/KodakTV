@@ -25,6 +25,10 @@ export interface AdminConfig {
     EnableTMDB?: boolean;
     AIModel?: string;
     AISystemPrompt?: string;
+    AIProvider?: string;
+    AIAPIBase?: string;
+    AIAPIPath?: string;
+    OpenAIKey?: string;
   };
   UserConfig: {
     Users: {

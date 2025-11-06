@@ -230,6 +230,10 @@ async function getInitConfig(configFile: string, subConfig: {
         process.env.NEXT_PUBLIC_ENABLE_TMDB !== 'false',
       AIModel: process.env.AI_MODEL || '',
       AISystemPrompt: process.env.AI_SYSTEM_PROMPT || '',
+      AIProvider: process.env.AI_PROVIDER || 'openai',
+      AIAPIBase: process.env.AI_API_BASE || '',
+      AIAPIPath: process.env.AI_API_PATH || '',
+      OpenAIKey: process.env.OPENAI_API_KEY || process.env.OAI_API_KEY || '',
     },
     UserConfig: {
       Users: [],

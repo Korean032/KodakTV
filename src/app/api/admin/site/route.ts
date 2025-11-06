@@ -48,6 +48,10 @@ export async function POST(request: NextRequest) {
       EnableTMDB,
       AIModel,
       AISystemPrompt,
+      AIProvider,
+      AIAPIBase,
+      AIAPIPath,
+      OpenAIKey,
     } = body as {
       SiteName: string;
       Announcement: string;
@@ -68,6 +72,10 @@ export async function POST(request: NextRequest) {
       EnableTMDB?: boolean;
       AIModel?: string;
       AISystemPrompt?: string;
+      AIProvider?: string;
+      AIAPIBase?: string;
+      AIAPIPath?: string;
+      OpenAIKey?: string;
     };
 
     // 参数校验
@@ -91,6 +99,10 @@ export async function POST(request: NextRequest) {
       || (EnableTMDB !== undefined && typeof EnableTMDB !== 'boolean')
       || (AIModel !== undefined && typeof AIModel !== 'string')
       || (AISystemPrompt !== undefined && typeof AISystemPrompt !== 'string')
+      || (AIProvider !== undefined && typeof AIProvider !== 'string')
+      || (AIAPIBase !== undefined && typeof AIAPIBase !== 'string')
+      || (AIAPIPath !== undefined && typeof AIAPIPath !== 'string')
+      || (OpenAIKey !== undefined && typeof OpenAIKey !== 'string')
     ) {
       return NextResponse.json({ error: '参数格式错误' }, { status: 400 });
     }
@@ -129,6 +141,10 @@ export async function POST(request: NextRequest) {
       EnableTMDB: EnableTMDB ?? adminConfig.SiteConfig.EnableTMDB ?? true,
       AIModel: AIModel ?? adminConfig.SiteConfig.AIModel ?? '',
       AISystemPrompt: AISystemPrompt ?? adminConfig.SiteConfig.AISystemPrompt ?? '',
+      AIProvider: AIProvider ?? adminConfig.SiteConfig.AIProvider ?? 'openai',
+      AIAPIBase: AIAPIBase ?? adminConfig.SiteConfig.AIAPIBase ?? '',
+      AIAPIPath: AIAPIPath ?? adminConfig.SiteConfig.AIAPIPath ?? '',
+      OpenAIKey: OpenAIKey ?? adminConfig.SiteConfig.OpenAIKey ?? '',
     };
 
     // 写入数据库
