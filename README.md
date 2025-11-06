@@ -73,15 +73,13 @@
 
 ### zeabur 一键部署
 
-已提供完整模板说明文档，你可以在 Zeabur 中创建并发布模板，然后将模板链接写入 README 按钮：
+一键部署模板已发布，点击下方按钮即可创建并部署完整环境（KodakTV + KVRocks）：
 
-[查看模板说明与步骤](docs/zeabur-template.md)
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/zh-CN/templates/F0DG0F)
 
-创建完成后，将下方按钮链接中的 `<TEMPLATE_ID>` 替换为你发布后的实际 ID：
+如需查看模板结构或在 CLI 中部署，请参阅：[模板说明与步骤](docs/zeabur-template.md) 与 [docs/template.yaml](docs/template.yaml)。
 
-[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/<TEMPLATE_ID>/deploy)
-
-在模板发布前或不使用模板时，可按下方「☁️ Zeabur 部署（推荐）」的手动方式添加服务（KodakTV 镜像 + KVRocks），效果与一键部署一致：
+如果不使用模板，也可按下方「☁️ Zeabur 部署（推荐）」的手动方式添加服务（KodakTV 镜像 + KVRocks），效果与一键部署一致：
 
 **优势**：
 - ✅ 无需配置，一键启动（自动部署完整环境）
