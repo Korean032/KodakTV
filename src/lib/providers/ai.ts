@@ -1,5 +1,6 @@
 import { Provider, registerProvider, SearchResultItem } from './index';
 import { getConfig } from '@/lib/config';
+import { searchFromApi } from '@/lib/downstream';
 
 async function getAiConfig() {
   try {
@@ -52,7 +53,32 @@ const AiProvider: Provider = {
   name: 'AI Recommend',
   async search(prompt: string, opts?: Record<string, any>): Promise<SearchResultItem[]> {
     const { apiKey, model, systemPrompt } = await getAiConfig();
-    if (!apiKey) return [];
+    // 无密钥时的降级：使用站点源进行聚合搜索，作为“启用即用”的智能推荐
+    if (!apiKey) {
+      try {
+        const cfg = await getConfig();
+        const query = prompt || '热门';
+        const sources = (cfg.SourceConfig || []).slice(0, 4); // 最多取前4个源以控时
+        const tasks = sources.map((s) => searchFromApi(s as any, query).catch(()=>[]));
+        const results = await Promise.all(tasks);
+        const flat = results.flat();
+        const dedupByTitle = new Map<string, any>();
+        flat.forEach((r: any) => {
+          const key = (r.title || '') + (r.source_name || '');
+          if (!dedupByTitle.has(key)) dedupByTitle.set(key, r);
+        });
+        const picked = Array.from(dedupByTitle.values()).slice(0, 10);
+        return picked.map((r: any, idx: number) => ({
+          id: String(r.douban_id || r.id || idx + 1),
+          title: r.title,
+          cover: r.poster,
+          source_name: r.source_name || '聚合',
+          type: (opts?.type as any) || 'vod',
+        }));
+      } catch {
+        return [];
+      }
+    }
 
     const body = {
       model,
