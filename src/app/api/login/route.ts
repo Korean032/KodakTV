@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // 验证成功，设置认证cookie
+      // 验证成功，设置认证cookie，并记录登录时间
       const response = NextResponse.json({ ok: true });
       const cookieValue = await generateAuthCookie(
         undefined,
@@ -120,6 +120,19 @@ export async function POST(req: NextRequest) {
         secure: false, // 根据协议自动设置
       });
 
+      try {
+        const adminConfig = await getConfig();
+        const owner = adminConfig.UserConfig.Users.find((u)=>u.username===process.env.USERNAME);
+        if (owner) {
+          owner.lastLogin = Date.now();
+          const hist = owner.loginHistory || [];
+          hist.push(owner.lastLogin);
+          owner.loginHistory = hist.slice(-50);
+          await db.saveAdminConfig(adminConfig);
+        }
+      } catch (e) {
+        console.warn('记录站长登录时间失败', (e as Error).message);
+      }
       return response;
     }
 
@@ -138,7 +151,7 @@ export async function POST(req: NextRequest) {
       username === process.env.USERNAME &&
       password === process.env.PASSWORD
     ) {
-      // 验证成功，设置认证cookie
+      // 验证成功，设置认证cookie，并记录登录时间
       const response = NextResponse.json({ ok: true });
       const cookieValue = await generateAuthCookie(
         username,
@@ -157,6 +170,19 @@ export async function POST(req: NextRequest) {
         secure: false, // 根据协议自动设置
       });
 
+      try {
+        const adminConfig = await getConfig();
+        const entry = adminConfig.UserConfig.Users.find((u)=>u.username===username);
+        if (entry) {
+          entry.lastLogin = Date.now();
+          const hist = entry.loginHistory || [];
+          hist.push(entry.lastLogin);
+          entry.loginHistory = hist.slice(-50);
+          await db.saveAdminConfig(adminConfig);
+        }
+      } catch (e) {
+        console.warn('记录登录时间失败', (e as Error).message);
+      }
       return response;
     } else if (username === process.env.USERNAME) {
       return NextResponse.json({ error: '用户名或密码错误' }, { status: 401 });

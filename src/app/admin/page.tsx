@@ -1127,6 +1127,12 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
                 </th>
                 <th
                   scope='col'
+                  className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'
+                >
+                  最近登录
+                </th>
+                <th
+                  scope='col'
                   className='px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'
                 >
                   操作
@@ -1290,6 +1296,11 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
                               );
                             })}
                           </div>
+                        </td>
+                        <td className='px-6 py-4 whitespace-nowrap'>
+                          <span className='text-xs text-gray-600 dark:text-gray-400'>
+                            {(user as any).lastLogin ? new Date((user as any).lastLogin).toLocaleString() : '—'}
+                          </span>
                         </td>
                         <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2'>
                           {/* 修改密码按钮 */}

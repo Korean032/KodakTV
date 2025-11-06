@@ -51,6 +51,8 @@ export interface AdminConfig {
         canPanSou?: boolean;
         canShortDrama?: boolean;
       };
+      lastLogin?: number;
+      loginHistory?: number[];
       enabledApis?: string[]; // 优先级高于tags限制
       tags?: string[]; // 多 tags 取并集限制
     }[];
