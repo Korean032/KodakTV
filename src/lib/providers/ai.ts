@@ -69,13 +69,24 @@ const AiProvider: Provider = {
 
     try {
       const { url, headers } = getAiEndpoint(apiKey);
-      const res = await fetch(url, {
+      // 首次请求（带 response_format）
+      let res = await fetch(url, {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
       });
+      // 某些免费或兼容接口不支持 response_format，降级重试
       if (!res.ok) {
-        return [];
+        const fallbackBody = { ...body };
+        delete (fallbackBody as any).response_format;
+        res = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(fallbackBody),
+        });
+        if (!res.ok) {
+          return [];
+        }
       }
       const json = await res.json();
       const text = json?.choices?.[0]?.message?.content || '{"items": []}';
