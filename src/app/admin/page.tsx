@@ -39,8 +39,6 @@ import {
 } from 'lucide-react';
 import { GripVertical } from 'lucide-react';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import BrandPill from '@/components/BrandPill';
-import { useSite } from '@/components/SiteProvider';
 import { createPortal } from 'react-dom';
 
 import { AdminConfig, AdminConfigResult } from '@/lib/admin.types';
@@ -4554,7 +4552,6 @@ const LiveSourceConfig = ({
 };
 
 function AdminPageClient() {
-  const { siteName } = useSite();
   const { alertModal, showAlert, hideAlert } = useAlertModal();
   const { isLoading, withLoading } = useLoadingState();
   const [config, setConfig] = useState<AdminConfig | null>(null);
@@ -4667,10 +4664,6 @@ function AdminPageClient() {
     <PageLayout activePath='/admin'>
       <div className='px-2 sm:px-10 py-4 sm:py-8'>
         <div className='max-w-[95%] mx-auto'>
-          {/* 居中品牌胶囊 */}
-          <div className='flex justify-center mb-6'>
-            <BrandPill text={siteName} className='px-4 py-2' />
-          </div>
           {/* 标题 + 重置配置按钮 */}
           <div className='flex items-center gap-2 mb-8'>
             <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100'>

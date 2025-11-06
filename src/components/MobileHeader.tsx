@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import BrandPill from './BrandPill';
 
 import { BackButton } from './BackButton';
 import { useSite } from './SiteProvider';
@@ -48,9 +47,14 @@ const MobileHeader = ({ showBackButton = false }: MobileHeaderProps) => {
         </div>
       </div>
 
-      {/* 中间：Logo（绝对居中，液态玻璃胶囊） */}
+      {/* 中间：Logo（绝对居中） */}
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-        <BrandPill text={siteName} href='/' className='px-3 py-1' />
+        <Link
+          href='/'
+          className='text-2xl font-bold text-green-600 tracking-tight hover:opacity-80 transition-opacity'
+        >
+          {siteName}
+        </Link>
       </div>
     </header>
   );

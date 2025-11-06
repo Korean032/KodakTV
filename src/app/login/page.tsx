@@ -127,13 +127,9 @@ function LoginPageClient() {
         <ThemeToggle />
       </div>
       <div className='relative z-10 w-full max-w-md rounded-3xl bg-gradient-to-b from-white/90 via-white/70 to-white/40 dark:from-zinc-900/90 dark:via-zinc-900/70 dark:to-zinc-900/40 backdrop-blur-xl shadow-2xl p-10 dark:border dark:border-zinc-800'>
-        <div className='w-full flex justify-center mb-8'>
-          <div className='inline-flex items-center justify-center rounded-full px-6 py-3 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-zinc-700/40 shadow-md'>
-            <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent tracking-tight text-2xl font-extrabold'>
-              {siteName}
-            </span>
-          </div>
-        </div>
+        <h1 className='text-green-600 tracking-tight text-center text-3xl font-extrabold mb-8 bg-clip-text drop-shadow-sm'>
+          {siteName}
+        </h1>
         <form onSubmit={handleSubmit} className='space-y-8'>
           {shouldAskUsername && (
             <div>
@@ -171,15 +167,15 @@ function LoginPageClient() {
             <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
           )}
 
-          {/* 登录按钮 - 胶囊玻璃 + 渐变文字 */}
+          {/* 登录按钮 */}
           <button
             type='submit'
-            disabled={!password || loading || (shouldAskUsername && !username)}
-            className='inline-flex w-full justify-center rounded-full bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-zinc-700/40 py-3 text-base font-semibold shadow-md transition-all duration-200 hover:bg-white/70 dark:hover:bg-zinc-900/70 disabled:cursor-not-allowed disabled:opacity-50'
+            disabled={
+              !password || loading || (shouldAskUsername && !username)
+            }
+            className='inline-flex w-full justify-center rounded-lg bg-green-600 py-3 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:from-green-600 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-50'
           >
-            <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent'>
-              {loading ? '登录中...' : '登录'}
-            </span>
+            {loading ? '登录中...' : '登录'}
           </button>
         </form>
       </div>

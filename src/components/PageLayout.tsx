@@ -28,7 +28,7 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
           )}
 
           {/* 桌面端顶部按钮（玻璃态容器） */}
-          <div className='absolute top-2 right-4 z-20 hidden md:flex items-center gap-2 bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 rounded-full shadow-md px-2 py-2'>
+          <div className='absolute top-2 right-4 z-20 hidden md:flex items-center gap-1 bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl border border-gray-200/40 dark:border-gray-700/40 rounded-full shadow-md px-1 py-1'>
             <ThemeToggle />
             <UserMenu />
           </div>
