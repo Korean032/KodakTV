@@ -218,6 +218,12 @@ async function getInitConfig(configFile: string, subConfig: {
         process.env.NEXT_PUBLIC_DISABLE_YELLOW_FILTER === 'true',
       FluidSearch:
         process.env.NEXT_PUBLIC_FLUID_SEARCH !== 'false',
+      // Ecosystem toggles
+      EnableYouTube: process.env.NEXT_PUBLIC_ENABLE_YOUTUBE === 'true',
+      EnablePanSou: process.env.NEXT_PUBLIC_ENABLE_PANSOU === 'true',
+      EnableShortDrama: process.env.NEXT_PUBLIC_ENABLE_SHORTDRAMA === 'true',
+      EnableIPTV: process.env.NEXT_PUBLIC_ENABLE_IPTV !== 'false',
+      EnableBangumi: process.env.NEXT_PUBLIC_ENABLE_BANGUMI !== 'false',
     },
     UserConfig: {
       Users: [],

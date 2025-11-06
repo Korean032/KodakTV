@@ -16,6 +16,11 @@ export interface AdminConfig {
     DoubanImageProxy: string;
     DisableYellowFilter: boolean;
     FluidSearch: boolean;
+    EnableYouTube?: boolean;
+    EnablePanSou?: boolean;
+    EnableShortDrama?: boolean;
+    EnableIPTV?: boolean;
+    EnableBangumi?: boolean;
   };
   UserConfig: {
     Users: {

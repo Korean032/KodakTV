@@ -15,37 +15,41 @@
 
 /* ===== Artplayer Glass Theme ===== */
 .artplayer .art-bottom {
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.28) !important;
+  background-color: rgba(255, 255, 255, 0.28) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15) !important;
+  padding: 8px 12px !important;
 }
 .dark .artplayer .art-bottom {
-  background: rgba(17, 24, 39, 0.35);
-  border-color: rgba(75, 85, 99, 0.45);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  background: rgba(17, 24, 39, 0.40) !important;
+  background-color: rgba(17, 24, 39, 0.40) !important;
+  border-color: rgba(75, 85, 99, 0.45) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
 }
 
-.artplayer .art-controls .art-control,
-.artplayer .art-controls .art-time,
-.artplayer .art-controls .art-volume {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  padding: 2px 8px;
+.artplayer .art-bottom .art-controls .art-control,
+.artplayer .art-bottom .art-time,
+.artplayer .art-bottom .art-volume {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  padding: 4px 10px !important;
+  display: inline-flex;
+  align-items: center;
 }
-.dark .artplayer .art-controls .art-control,
-.dark .artplayer .art-controls .art-time,
-.dark .artplayer .art-controls .art-volume {
-  background: rgba(31, 41, 55, 0.45);
-  border-color: rgba(75, 85, 99, 0.5);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+.dark .artplayer .art-bottom .art-controls .art-control,
+.dark .artplayer .art-bottom .art-time,
+.dark .artplayer .art-bottom .art-volume {
+  background: rgba(31, 41, 55, 0.45) !important;
+  border-color: rgba(75, 85, 99, 0.5) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
 }
 
 .artplayer .art-bottom .art-controls > * {
@@ -53,21 +57,21 @@
 }
 
 .artplayer .art-bottom .art-progress {
-  background: rgba(255, 255, 255, 0.22);
-  height: 8px !important;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.22) !important;
+  height: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 9999px !important;
 }
 .artplayer .art-bottom .art-progress .art-loaded,
 .artplayer .art-bottom .art-progress .art-played {
-  border-radius: 9999px;
+  border-radius: 9999px !important;
 }
 .artplayer .art-bottom .art-progress .art-played {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, #10b981, #059669) !important;
 }
 .dark .artplayer .art-bottom .art-progress {
-  background: rgba(55, 65, 81, 0.45);
-  border-color: rgba(75, 85, 99, 0.5);
+  background: rgba(55, 65, 81, 0.45) !important;
+  border-color: rgba(75, 85, 99, 0.5) !important;
 }
 
 .artplayer .art-controls .art-control:hover,
