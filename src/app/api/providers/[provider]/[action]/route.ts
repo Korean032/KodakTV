@@ -4,6 +4,8 @@ import '../../../../../lib/providers/pansou';
 import '../../../../../lib/providers/shortdrama';
 import '../../../../../lib/providers/iptv';
 import '../../../../../lib/providers/bangumi';
+import '../../../../../lib/providers/ai';
+import '../../../../../lib/providers/tmdb';
 import { getProvider } from '@/lib/providers';
 
 export async function GET(req: NextRequest, { params }: { params: { provider: string; action: string } }) {

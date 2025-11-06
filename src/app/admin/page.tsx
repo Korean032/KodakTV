@@ -274,6 +274,10 @@ interface SiteConfig {
   EnableShortDrama?: boolean;
   EnableIPTV?: boolean;
   EnableBangumi?: boolean;
+  EnableAIRecommend?: boolean;
+  EnableTMDB?: boolean;
+  AIModel?: string;
+  AISystemPrompt?: string;
 }
 
 // 视频源数据类型
@@ -3526,6 +3530,10 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
         EnableShortDrama: config.SiteConfig.EnableShortDrama ?? false,
         EnableIPTV: config.SiteConfig.EnableIPTV ?? true,
         EnableBangumi: config.SiteConfig.EnableBangumi ?? true,
+        EnableAIRecommend: config.SiteConfig.EnableAIRecommend ?? false,
+        EnableTMDB: config.SiteConfig.EnableTMDB ?? true,
+        AIModel: config.SiteConfig.AIModel || '',
+        AISystemPrompt: config.SiteConfig.AISystemPrompt || '',
       });
     }
   }, [config]);
@@ -4035,6 +4043,50 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
           >
             <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableBangumi ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
           </button>
+        </div>
+        {/* AI Recommend */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用 AI 智能推荐</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnableAIRecommend: !prev.EnableAIRecommend }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnableAIRecommend ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableAIRecommend ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        {/* TMDB */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用 TMDB</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnableTMDB: !prev.EnableTMDB }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnableTMDB ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableTMDB ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        {/* AI Model */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI 模型</label>
+          <input
+            type='text'
+            placeholder='例如: gpt-4o-mini'
+            value={siteSettings.AIModel || ''}
+            onChange={(e) => setSiteSettings(prev => ({ ...prev, AIModel: e.target.value }))}
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+          />
+        </div>
+        {/* AI System Prompt */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>AI 系统提示词</label>
+          <textarea
+            rows={3}
+            placeholder='配置系统提示词以控制推荐风格'
+            value={siteSettings.AISystemPrompt || ''}
+            onChange={(e) => setSiteSettings(prev => ({ ...prev, AISystemPrompt: e.target.value }))}
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+          />
         </div>
         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>开启后将在界面与路由层启用对应 Provider（YouTube、网盘、短剧、IPTV、Bangumi）。</p>
       </div>

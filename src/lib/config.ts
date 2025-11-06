@@ -224,6 +224,12 @@ async function getInitConfig(configFile: string, subConfig: {
       EnableShortDrama: process.env.NEXT_PUBLIC_ENABLE_SHORTDRAMA === 'true',
       EnableIPTV: process.env.NEXT_PUBLIC_ENABLE_IPTV !== 'false',
       EnableBangumi: process.env.NEXT_PUBLIC_ENABLE_BANGUMI !== 'false',
+      EnableAIRecommend:
+        process.env.NEXT_PUBLIC_ENABLE_AI === 'true',
+      EnableTMDB:
+        process.env.NEXT_PUBLIC_ENABLE_TMDB !== 'false',
+      AIModel: process.env.AI_MODEL || '',
+      AISystemPrompt: process.env.AI_SYSTEM_PROMPT || '',
     },
     UserConfig: {
       Users: [],

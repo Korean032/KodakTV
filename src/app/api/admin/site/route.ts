@@ -44,6 +44,10 @@ export async function POST(request: NextRequest) {
       EnableShortDrama,
       EnableIPTV,
       EnableBangumi,
+      EnableAIRecommend,
+      EnableTMDB,
+      AIModel,
+      AISystemPrompt,
     } = body as {
       SiteName: string;
       Announcement: string;
@@ -60,6 +64,10 @@ export async function POST(request: NextRequest) {
       EnableShortDrama?: boolean;
       EnableIPTV?: boolean;
       EnableBangumi?: boolean;
+      EnableAIRecommend?: boolean;
+      EnableTMDB?: boolean;
+      AIModel?: string;
+      AISystemPrompt?: string;
     };
 
     // 参数校验
@@ -79,6 +87,10 @@ export async function POST(request: NextRequest) {
       (EnableShortDrama !== undefined && typeof EnableShortDrama !== 'boolean') ||
       (EnableIPTV !== undefined && typeof EnableIPTV !== 'boolean') ||
       (EnableBangumi !== undefined && typeof EnableBangumi !== 'boolean')
+      || (EnableAIRecommend !== undefined && typeof EnableAIRecommend !== 'boolean')
+      || (EnableTMDB !== undefined && typeof EnableTMDB !== 'boolean')
+      || (AIModel !== undefined && typeof AIModel !== 'string')
+      || (AISystemPrompt !== undefined && typeof AISystemPrompt !== 'string')
     ) {
       return NextResponse.json({ error: '参数格式错误' }, { status: 400 });
     }
@@ -113,6 +125,10 @@ export async function POST(request: NextRequest) {
       EnableShortDrama: !!EnableShortDrama,
       EnableIPTV: EnableIPTV ?? adminConfig.SiteConfig.EnableIPTV ?? true,
       EnableBangumi: EnableBangumi ?? adminConfig.SiteConfig.EnableBangumi ?? true,
+      EnableAIRecommend: EnableAIRecommend ?? adminConfig.SiteConfig.EnableAIRecommend ?? false,
+      EnableTMDB: EnableTMDB ?? adminConfig.SiteConfig.EnableTMDB ?? true,
+      AIModel: AIModel ?? adminConfig.SiteConfig.AIModel ?? '',
+      AISystemPrompt: AISystemPrompt ?? adminConfig.SiteConfig.AISystemPrompt ?? '',
     };
 
     // 写入数据库

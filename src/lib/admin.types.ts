@@ -21,6 +21,10 @@ export interface AdminConfig {
     EnableShortDrama?: boolean;
     EnableIPTV?: boolean;
     EnableBangumi?: boolean;
+    EnableAIRecommend?: boolean;
+    EnableTMDB?: boolean;
+    AIModel?: string;
+    AISystemPrompt?: string;
   };
   UserConfig: {
     Users: {
