@@ -29,13 +29,33 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
+.artplayer .art-controls .art-control,
+.artplayer .art-controls .art-time,
+.artplayer .art-controls .art-volume {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  padding: 2px 8px;
+}
+.dark .artplayer .art-controls .art-control,
+.dark .artplayer .art-controls .art-time,
+.dark .artplayer .art-controls .art-volume {
+  background: rgba(31, 41, 55, 0.45);
+  border-color: rgba(75, 85, 99, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
 .artplayer .art-bottom .art-controls > * {
   border-radius: 9999px;
 }
 
 .artplayer .art-bottom .art-progress {
-  background: rgba(255, 255, 255, 0.25);
-  height: 6px !important;
+  background: rgba(255, 255, 255, 0.22);
+  height: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 9999px;
 }
 .artplayer .art-bottom .art-progress .art-loaded,
@@ -47,6 +67,7 @@
 }
 .dark .artplayer .art-bottom .art-progress {
   background: rgba(55, 65, 81, 0.45);
+  border-color: rgba(75, 85, 99, 0.5);
 }
 
 .artplayer .art-controls .art-control:hover,
