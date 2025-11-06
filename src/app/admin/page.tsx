@@ -38,7 +38,9 @@ import {
   Video,
 } from 'lucide-react';
 import { GripVertical } from 'lucide-react';
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import BrandPill from '@/components/BrandPill';
+import { useSite } from '@/components/SiteProvider';
 import { createPortal } from 'react-dom';
 
 import { AdminConfig, AdminConfigResult } from '@/lib/admin.types';
@@ -136,6 +138,59 @@ const AlertModal = ({
         return <AlertTriangle className="w-8 h-8 text-yellow-500" />;
       default:
         return null;
+    }
+  };
+
+  // 导出视频源
+  const handleExportSources = async () => {
+    try {
+      const resp = await fetch('/api/admin/source/export');
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.error || `导出失败: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kodaktv-video-sources.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showSuccess('视频源导出成功', showAlert);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : '导出失败', showAlert);
+    }
+  };
+
+  // 导入视频源
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const triggerImportSources = () => fileInputRef.current?.click();
+  const handleImportFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      const items = Array.isArray(json?.items) ? json.items : json;
+      if (!Array.isArray(items)) throw new Error('导入文件格式错误');
+      const resp = await fetch('/api/admin/source/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      });
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.error || `导入失败: ${resp.status}`);
+      }
+      await refreshConfig();
+      showSuccess('视频源导入成功', showAlert);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : '导入失败', showAlert);
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -2508,6 +2563,12 @@ const VideoSourceConfig = ({
           视频源列表
         </h4>
         <div className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2'>
+          {/* 导入/导出 */}
+          <div className='flex items-center gap-2 order-1 sm:order-none'>
+            <button onClick={handleExportSources} className={buttonStyles.secondarySmall}>导出</button>
+            <button onClick={triggerImportSources} className={buttonStyles.primarySmall}>导入</button>
+            <input ref={fileInputRef} type='file' accept='application/json' className='hidden' onChange={handleImportFileChange} />
+          </div>
           {/* 批量操作按钮 - 移动端显示在下一行，PC端显示在左侧 */}
           {selectedSources.size > 0 && (
             <>
@@ -4245,6 +4306,9 @@ const LiveSourceConfig = ({
           >
             {showAddForm ? '取消' : '添加直播源'}
           </button>
+          <button onClick={handleExportLiveSources} className={buttonStyles.secondarySmall}>导出</button>
+          <button onClick={triggerImportLiveSources} className={buttonStyles.primarySmall}>导入</button>
+          <input ref={liveFileInputRef} type='file' accept='application/json' className='hidden' onChange={handleLiveImportFileChange} />
         </div>
       </div>
 
@@ -4490,6 +4554,7 @@ const LiveSourceConfig = ({
 };
 
 function AdminPageClient() {
+  const { siteName } = useSite();
   const { alertModal, showAlert, hideAlert } = useAlertModal();
   const { isLoading, withLoading } = useLoadingState();
   const [config, setConfig] = useState<AdminConfig | null>(null);
@@ -4602,6 +4667,10 @@ function AdminPageClient() {
     <PageLayout activePath='/admin'>
       <div className='px-2 sm:px-10 py-4 sm:py-8'>
         <div className='max-w-[95%] mx-auto'>
+          {/* 居中品牌胶囊 */}
+          <div className='flex justify-center mb-6'>
+            <BrandPill text={siteName} className='px-4 py-2' />
+          </div>
           {/* 标题 + 重置配置按钮 */}
           <div className='flex items-center gap-2 mb-8'>
             <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100'>
