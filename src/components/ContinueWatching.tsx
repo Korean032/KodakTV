@@ -22,6 +22,7 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
     (PlayRecord & { key: string })[]
   >([]);
   const [loading, setLoading] = useState(true);
+  const [userLevel, setUserLevel] = useState<string>('');
 
   // 处理播放记录数据更新的函数
   const updatePlayRecords = (allRecords: Record<string, PlayRecord>) => {
@@ -57,6 +58,17 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
 
     fetchPlayRecords();
 
+    // 获取用户等级用于徽章与光环
+    (async () => {
+      try {
+        const res = await fetch('/api/stats/user/level');
+        const json = await res.json();
+        if (json?.ok && json?.level) setUserLevel(json.level);
+      } catch {
+        /* ignore */
+      }
+    })();
+
     // 监听播放记录更新事件
     const unsubscribe = subscribeToDataUpdates(
       'playRecordsUpdated',
@@ -88,8 +100,13 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
   return (
     <section className={`mb-8 ${className || ''}`}>
       <div className='mb-4 flex items-center justify-between'>
-        <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
+        <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center gap-2'>
           继续观看
+          {userLevel && (
+            <span className='px-2 py-0.5 text-xs rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-md'>
+              {userLevel}
+            </span>
+          )}
         </h2>
         {!loading && playRecords.length > 0 && (
           <button
@@ -124,8 +141,11 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
               return (
                 <div
                   key={record.key}
-                  className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'
+                  className={`min-w-[96px] w-24 sm:min-w-[180px] sm:w-44 ${userLevel ? 'relative' : ''}`}
                 >
+                  {userLevel && (
+                    <div className='pointer-events-none absolute -inset-0.5 rounded-xl bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 blur-sm'></div>
+                  )}
                   <VideoCard
                     id={id}
                     title={record.title}

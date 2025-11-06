@@ -799,6 +799,42 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
 
   return (
     <div className='space-y-6'>
+      {/* 非活跃用户清理 */}
+      <div className='border border-gray-200 dark:border-gray-700 rounded-lg p-4'>
+        <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-3'>非活跃用户清理</h4>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
+          <div>
+            <label className='block text-xs text-gray-500 dark:text-gray-400 mb-1'>保留天数</label>
+            <input type='number' min={1} defaultValue={30} id='cleanup_days' className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100' />
+          </div>
+          <div>
+            <label className='block text-xs text-gray-500 dark:text-gray-400 mb-1'>动作</label>
+            <select id='cleanup_action' className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'>
+              <option value='ban'>封禁</option>
+              <option value='delete'>删除</option>
+            </select>
+          </div>
+          <div className='flex items-end'>
+            <button
+              className={buttonStyles.warning}
+              onClick={async ()=>{
+                await withLoading('cleanup_inactive', async () => {
+                  try {
+                    const days = Number((document.getElementById('cleanup_days') as HTMLInputElement).value||'30');
+                    const action = ((document.getElementById('cleanup_action') as HTMLSelectElement).value||'ban') as 'ban'|'delete';
+                    const res = await fetch('/api/admin/user/cleanup', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ days, action }) });
+                    const data = await res.json();
+                    if (!res.ok || !data.ok) throw new Error(data.error || `清理失败: ${res.status}`);
+                    showSuccess(`已清理 ${data.affected?.length||0} 个用户（${action}，保留${days}天）`, showAlert);
+                  } catch (e) {
+                    showError((e as Error).message, showAlert);
+                  }
+                });
+              }}
+            >一键清理</button>
+          </div>
+        </div>
+      </div>
       {/* 用户统计（选项卡：个人/全局） */}
       <div>
         <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-3'>用户统计</h4>
