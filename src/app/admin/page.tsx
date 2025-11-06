@@ -139,58 +139,7 @@ const AlertModal = ({
     }
   };
 
-  // 导出视频源
-  const handleExportSources = async () => {
-    try {
-      const resp = await fetch('/api/admin/source/export');
-      if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error || `导出失败: ${resp.status}`);
-      }
-      const data = await resp.json();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'kodaktv-video-sources.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showSuccess('视频源导出成功', showAlert);
-    } catch (err) {
-      showError(err instanceof Error ? err.message : '导出失败', showAlert);
-    }
-  };
-
-  // 导入视频源
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const triggerImportSources = () => fileInputRef.current?.click();
-  const handleImportFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const json = JSON.parse(text);
-      const items = Array.isArray(json?.items) ? json.items : json;
-      if (!Array.isArray(items)) throw new Error('导入文件格式错误');
-      const resp = await fetch('/api/admin/source/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
-      });
-      if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error || `导入失败: ${resp.status}`);
-      }
-      await refreshConfig();
-      showSuccess('视频源导入成功', showAlert);
-    } catch (err) {
-      showError(err instanceof Error ? err.message : '导入失败', showAlert);
-    } finally {
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
+  
 
   const getBgColor = () => {
     switch (type) {
@@ -2177,6 +2126,59 @@ const VideoSourceConfig = ({
     }
   };
 
+  // 导出视频源
+  const handleExportSources = async () => {
+    try {
+      const resp = await fetch('/api/admin/source/export');
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.error || `导出失败: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kodaktv-video-sources.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showSuccess('视频源导出成功', showAlert);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : '导出失败', showAlert);
+    }
+  };
+
+  // 导入视频源
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const triggerImportSources = () => fileInputRef.current?.click();
+  const handleImportFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      const items = Array.isArray(json?.items) ? json.items : json;
+      if (!Array.isArray(items)) throw new Error('导入文件格式错误');
+      const resp = await fetch('/api/admin/source/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      });
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.error || `导入失败: ${resp.status}`);
+      }
+      await refreshConfig();
+      showSuccess('视频源导入成功', showAlert);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : '导入失败', showAlert);
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handleToggleEnable = (key: string) => {
     const target = sources.find((s) => s.key === key);
     if (!target) return;
@@ -4063,6 +4065,59 @@ const LiveSourceConfig = ({
     } catch (err) {
       showError(err instanceof Error ? err.message : '操作失败', showAlert);
       throw err; // 向上抛出方便调用处判断
+      }
+  };
+
+  // 导出直播源
+  const handleExportLiveSources = async () => {
+    try {
+      const resp = await fetch('/api/admin/live/export');
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.error || `导出失败: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kodaktv-live-sources.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showSuccess('直播源导出成功', showAlert);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : '导出失败', showAlert);
+    }
+  };
+
+  // 导入直播源
+  const liveFileInputRef = useRef<HTMLInputElement | null>(null);
+  const triggerImportLiveSources = () => liveFileInputRef.current?.click();
+  const handleLiveImportFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      const items = Array.isArray(json?.items) ? json.items : json;
+      if (!Array.isArray(items)) throw new Error('导入文件格式错误');
+      const resp = await fetch('/api/admin/live/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      });
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data.error || `导入失败: ${resp.status}`);
+      }
+      await refreshConfig();
+      showSuccess('直播源导入成功', showAlert);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : '导入失败', showAlert);
+    } finally {
+      if (liveFileInputRef.current) liveFileInputRef.current.value = '';
     }
   };
 
