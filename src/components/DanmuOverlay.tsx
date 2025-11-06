@@ -30,6 +30,8 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
   const laneBusyRef = useRef<number[]>([]);
   const startTimeRef = useRef<number>(Date.now());
   const mountedRef = useRef<boolean>(false);
+  const workerRef = useRef<Worker|null>(null);
+  const laneMapRef = useRef<number[]>([]);
 
   useEffect(() => { laneBusyRef.current = new Array(lanesRef.current).fill(0); }, [settings.area]);
 
@@ -48,8 +50,8 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
         }
       }
     } catch {}
-    // fetch
-    fetch(`/api/danmu?source=${encodeURIComponent(source)}&id=${encodeURIComponent(id)}&title=${encodeURIComponent(title||'')}`)
+    // fetch（可指定 provider 与 limit）
+    fetch(`/api/danmu?provider=caiji&limit=500&source=${encodeURIComponent(source)}&id=${encodeURIComponent(id)}&title=${encodeURIComponent(title||'')}`)
       .then((r) => r.json())
       .then((data) => {
         const arr = Array.isArray(data.items) ? data.items : [];
@@ -61,6 +63,30 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
       .catch(() => setItems([]));
     return () => { mountedRef.current = false; };
   }, [source, id, title]);
+
+  // 初始化与使用 Web Worker 计算弹幕轨道分配
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const w = new Worker(new URL('../workers/danmu.worker.ts', import.meta.url));
+      workerRef.current = w;
+      const overlay = overlayRef.current;
+      const width = overlay?.clientWidth || 1280;
+      const height = overlay?.clientHeight || 720;
+      w.onmessage = (e: MessageEvent) => {
+        const data = e.data as any;
+        if (data?.ok && Array.isArray(data.positions)) {
+          laneMapRef.current = data.positions.map((p: any)=>p.lane);
+        }
+      };
+      const payload = { width, height, items: (items||[]).map((it)=>({ time: it.time, text: it.text, speed: settings.speed*120 })) };
+      w.postMessage(payload);
+      return () => { w.terminate(); workerRef.current = null; };
+    } catch {
+      // ignore worker failures; fallback到主线程
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, settings.speed]);
 
   useEffect(() => {
     try { localStorage.setItem('danmu_settings', JSON.stringify(settings)); } catch {}
@@ -80,7 +106,9 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, settings, perf]);
 
-  function chooseLane(): number {
+  function chooseLane(idx?: number): number {
+    const suggested = typeof idx === 'number' ? laneMapRef.current[idx] : undefined;
+    if (typeof suggested === 'number') return Math.max(0, Math.min(lanesRef.current-1, suggested));
     const now = Date.now();
     for (let i = 0; i < laneBusyRef.current.length; i++) {
       if (now > laneBusyRef.current[i]) return i;
@@ -92,7 +120,8 @@ export default function DanmuOverlay({ source, id, title }: { source: string; id
     const overlay = overlayRef.current;
     if (!overlay) return;
     const container = overlay as HTMLDivElement;
-    const lane = chooseLane();
+    const idx = items.indexOf(d);
+    const lane = chooseLane(idx);
     const div = document.createElement('div');
     div.textContent = d.text;
     div.style.position = 'absolute';

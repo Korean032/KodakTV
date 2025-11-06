@@ -134,6 +134,17 @@ function rewriteM3U8Content(content: string, baseUrl: string, req: Request, allo
       line = rewriteKeyUri(line, baseUrl, proxyBase);
     }
 
+    // 处理 EXT-X-MEDIA 标签中的 URI（音轨/字幕等）
+    if (line.startsWith('#EXT-X-MEDIA:')) {
+      const uriMatch = line.match(/URI="([^"]+)"/);
+      if (uriMatch) {
+        const originalUri = uriMatch[1];
+        const resolvedUrl = resolveUrl(baseUrl, originalUri);
+        const proxyUrl = `${proxyBase}/segment?url=${encodeURIComponent(resolvedUrl)}`;
+        line = line.replace(uriMatch[0], `URI="${proxyUrl}"`);
+      }
+    }
+
     // 处理嵌套的 M3U8 文件 (EXT-X-STREAM-INF)
     if (line.startsWith('#EXT-X-STREAM-INF:')) {
       rewrittenLines.push(line);
