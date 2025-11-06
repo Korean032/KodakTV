@@ -23,6 +23,9 @@ const CapsuleSwitch: React.FC<CapsuleSwitchProps> = ({
   }>({ left: 0, width: 0 });
 
   const activeIndex = options.findIndex((opt) => opt.value === active);
+  const startRef = useRef<{ x: number; y: number } | null>(null);
+  const movedRef = useRef<boolean>(false);
+  const threshold = 40; // px
 
   // 更新指示器位置
   const updateIndicatorPosition = () => {
@@ -59,6 +62,33 @@ const CapsuleSwitch: React.FC<CapsuleSwitchProps> = ({
     return () => clearTimeout(timeoutId);
   }, [activeIndex]);
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const t = e.touches[0];
+    startRef.current = { x: t.clientX, y: t.clientY };
+    movedRef.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    movedRef.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!startRef.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startRef.current.x;
+    const dy = Math.abs(t.clientY - startRef.current.y);
+    // 仅处理水平滑动，且需要一定阈值
+    if (Math.abs(dx) > threshold && dy < 30) {
+      if (dx < 0 && activeIndex < options.length - 1) {
+        onChange(options[activeIndex + 1].value);
+      } else if (dx > 0 && activeIndex > 0) {
+        onChange(options[activeIndex - 1].value);
+      }
+    }
+    startRef.current = null;
+    movedRef.current = false;
+  };
+
   return (
     <div className={`relative flex flex-col items-center mt-16 sm:mt-20 ${className || ''}`}>
       {/* 顶部品牌标签 */}
@@ -84,6 +114,9 @@ const CapsuleSwitch: React.FC<CapsuleSwitchProps> = ({
           border border-gray-200/40 dark:border-gray-700/40
           rounded-full p-1
         '
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
       {/* 滑动的白色背景指示器 */}
       {indicatorStyle.width > 0 && (
