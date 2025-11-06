@@ -26,6 +26,7 @@ import { getVideoResolutionFromM3u8, processImageUrl } from '@/lib/utils';
 
 import EpisodeSelector from '@/components/EpisodeSelector';
 import PageLayout from '@/components/PageLayout';
+import DanmuOverlay from '@/components/DanmuOverlay';
 
 // 扩展 HTMLVideoElement 类型以支持 hls 属性
 declare global {
@@ -1898,6 +1899,10 @@ function PlayPageClient() {
                   ref={artRef}
                   className='bg-black w-full h-full rounded-xl overflow-hidden shadow-lg'
                 ></div>
+                {/* 弹幕覆盖层 */}
+                {currentSource && currentId && (
+                  <DanmuOverlay source={currentSource} id={currentId} title={videoTitle} />
+                )}
 
                 {/* 换源加载蒙层 */}
                 {isVideoLoading && (
