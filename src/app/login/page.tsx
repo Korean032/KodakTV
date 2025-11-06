@@ -171,15 +171,15 @@ function LoginPageClient() {
             <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
           )}
 
-          {/* 登录按钮 */}
+          {/* 登录按钮 - 胶囊玻璃 + 渐变文字 */}
           <button
             type='submit'
-            disabled={
-              !password || loading || (shouldAskUsername && !username)
-            }
-            className='inline-flex w-full justify-center rounded-lg bg-green-600 py-3 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:from-green-600 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-50'
+            disabled={!password || loading || (shouldAskUsername && !username)}
+            className='inline-flex w-full justify-center rounded-full bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-zinc-700/40 py-3 text-base font-semibold shadow-md transition-all duration-200 hover:bg-white/70 dark:hover:bg-zinc-900/70 disabled:cursor-not-allowed disabled:opacity-50'
           >
-            {loading ? '登录中...' : '登录'}
+            <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent'>
+              {loading ? '登录中...' : '登录'}
+            </span>
           </button>
         </form>
       </div>
