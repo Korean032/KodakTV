@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://schema.zeabur.app/template.json
+apiVersion: zeabur.com/v1
+kind: Template
+metadata:
+  name: KodakTV
+spec:
+  description: KodakTV + KVRocks (GHCR: korean032/kodaktv)
+  icon: https://raw.githubusercontent.com/Korean032/KodakTV/main/public/logo.png
+  services:
+    - name: apachekvrocks
+      icon: https://avatars.githubusercontent.com/u/47359?s=200&v=4
+      template: PREBUILT_V2
+      spec:
+        source:
+          image: apache/kvrocks
+        ports:
+          - id: port-6666
+            port: 6666
+            type: TCP
+        volumes:
+          - id: kvrocks-data
+            dir: /var/lib/kvrocks/db
+        env: {}
+        configs: []
+        portForwarding:
+          enabled: true
+
+    - name: kodaktv-core
+      icon: https://raw.githubusercontent.com/Korean032/KodakTV/main/public/logo.png
+      template: PREBUILT_V2
+      spec:
+        source:
+          image: ghcr.io/korean032/kodaktv:latest
+        ports:
+          - id: port-3000
+            port: 3000
+            type: HTTP
+        env:
+          USERNAME:
+            expose: true
+          PASSWORD:
+            expose: true
+          NEXT_PUBLIC_STORAGE_TYPE:
+            default: kvrocks
+            expose: false
+          KVROCKS_URL:
+            default: redis://apachekvrocks:6666
+            expose: true
+          SITE_BASE:
+            expose: false
+          NEXT_PUBLIC_SITE_NAME:
+            default: KodakTV Enhanced
+            expose: false
+          ANNOUNCEMENT:
+            default: 欢迎使用 KodakTV Enhanced Edition
+            expose: false
+          NEXT_PUBLIC_DOUBAN_PROXY_TYPE:
+            default: cmliussss-cdn-tencent
+            expose: false
+          NEXT_PUBLIC_DOUBAN_IMAGE_PROXY_TYPE:
+            default: cmliussss-cdn-tencent
+            expose: false
+        configs: []
+        portForwarding:
+          enabled: true
