@@ -240,6 +240,8 @@ async function getInitConfig(configFile: string, subConfig: {
       AIEnableRateLimit: process.env.AI_ENABLE_RATE_LIMIT === 'true',
       AIRetryMaxAttempts: Number(process.env.AI_RETRY_MAX_ATTEMPTS || 2),
       AIRetryDelayMs: Number(process.env.AI_RETRY_DELAY_MS || 500),
+      InactiveRetentionDays: Number(process.env.INACTIVE_RETENTION_DAYS || 30),
+      InactiveCleanupAction: (process.env.INACTIVE_CLEANUP_ACTION as 'ban'|'delete') || 'ban',
     },
     UserConfig: {
       Users: [],
