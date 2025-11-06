@@ -32,6 +32,7 @@ const DesktopFloatingNav = ({ activePath }: DesktopFloatingNavProps) => {
     { icon: Cat, label: '动漫', href: '/douban?type=anime' },
     { icon: Clover, label: '综艺', href: '/douban?type=show' },
     { icon: Radio, label: '直播', href: '/live' },
+    { icon: Star, label: '推荐', href: '/recommend' },
   ]);
 
   useEffect(() => {

@@ -37,6 +37,9 @@ function HomeClient() {
   const [bangumiCalendarData, setBangumiCalendarData] = useState<
     BangumiCalendarData[]
   >([]);
+  // 新增：AI 推荐与发布日历
+  const [aiRecommendItems, setAiRecommendItems] = useState<any[]>([]);
+  const [releaseCalendarItems, setReleaseCalendarItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { announcement } = useSite();
 
@@ -75,7 +78,7 @@ function HomeClient() {
         setLoading(true);
 
         // 并行获取热门电影、热门剧集和热门综艺
-        const [moviesData, tvShowsData, varietyShowsData, bangumiCalendarData] =
+        const [moviesData, tvShowsData, varietyShowsData, bangumiCalendarData, aiRes, calRes] =
           await Promise.all([
             getDoubanCategories({
               kind: 'movie',
@@ -85,6 +88,8 @@ function HomeClient() {
             getDoubanCategories({ kind: 'tv', category: 'tv', type: 'tv' }),
             getDoubanCategories({ kind: 'tv', category: 'show', type: 'show' }),
             GetBangumiCalendarData(),
+            fetch('/api/providers/ai/search?q=热门&type=movie').then(r => r.ok ? r.json() : Promise.resolve({ items: [] })).catch(() => ({ items: [] })),
+            fetch('/api/providers/tmdb/search?kind=calendar').then(r => r.ok ? r.json() : Promise.resolve([])).catch(() => ([])),
           ]);
 
         if (moviesData.code === 200) {
@@ -100,6 +105,14 @@ function HomeClient() {
         }
 
         setBangumiCalendarData(bangumiCalendarData);
+        // AI 推荐
+        if (Array.isArray(aiRes.items)) {
+          setAiRecommendItems(aiRes.items);
+        }
+        // 发布日历
+        if (Array.isArray(calRes)) {
+          setReleaseCalendarItems(calRes);
+        }
       } catch (error) {
         console.error('获取推荐数据失败:', error);
       } finally {
@@ -235,6 +248,33 @@ function HomeClient() {
           ) : (
             // 首页视图
             <>
+              {/* 智能推荐（AI） */}
+              {aiRecommendItems.length > 0 && (
+                <section className='mb-8'>
+                  <div className='mb-4 flex items-center justify-between'>
+                    <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                      <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent drop-shadow-sm'>
+                        智能推荐
+                      </span>
+                    </h2>
+                  </div>
+                  <ScrollableRow>
+                    {aiRecommendItems.map((item, index) => (
+                      <div key={index} className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'>
+                        <VideoCard
+                          from='douban'
+                          title={item.title}
+                          poster={item.cover}
+                          douban_id={Number(item.id) || 0}
+                          year={item.year || ''}
+                          type={item.type === 'movie' ? 'movie' : ''}
+                        />
+                      </div>
+                    ))}
+                  </ScrollableRow>
+                </section>
+              )}
+
               {/* 热门电影 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
@@ -284,6 +324,33 @@ function HomeClient() {
                       ))}
                 </ScrollableRow>
               </section>
+
+              {/* 发布日历（TMDB） */}
+              {releaseCalendarItems.length > 0 && (
+                <section className='mb-8'>
+                  <div className='mb-4 flex items-center justify-between'>
+                    <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 inline-flex items-center px-3 py-1 rounded-full bg-white/30 dark:bg-gray-900/40 backdrop-blur-3xl border border-gray-200/40 dark:border-gray-700/40 shadow-md'>
+                      <span className='bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent drop-shadow-sm'>
+                        发布日历
+                      </span>
+                    </h2>
+                  </div>
+                  <ScrollableRow>
+                    {releaseCalendarItems.map((item: any, index: number) => (
+                      <div key={index} className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'>
+                        <VideoCard
+                          from='douban'
+                          title={item.title}
+                          poster={item.cover}
+                          douban_id={Number(item.id) || 0}
+                          year={item.year || ''}
+                          type={item.type === 'movie' ? 'movie' : ''}
+                        />
+                      </div>
+                    ))}
+                  </ScrollableRow>
+                </section>
+              )}
 
               {/* 热门剧集 */}
               <section className='mb-8'>
