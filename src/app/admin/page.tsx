@@ -269,6 +269,11 @@ interface SiteConfig {
   DoubanImageProxy: string;
   DisableYellowFilter: boolean;
   FluidSearch: boolean;
+  EnableYouTube?: boolean;
+  EnablePanSou?: boolean;
+  EnableShortDrama?: boolean;
+  EnableIPTV?: boolean;
+  EnableBangumi?: boolean;
 }
 
 // 视频源数据类型
@@ -3516,6 +3521,11 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
         DoubanImageProxy: config.SiteConfig.DoubanImageProxy || '',
         DisableYellowFilter: config.SiteConfig.DisableYellowFilter || false,
         FluidSearch: config.SiteConfig.FluidSearch || true,
+        EnableYouTube: config.SiteConfig.EnableYouTube ?? false,
+        EnablePanSou: config.SiteConfig.EnablePanSou ?? false,
+        EnableShortDrama: config.SiteConfig.EnableShortDrama ?? false,
+        EnableIPTV: config.SiteConfig.EnableIPTV ?? true,
+        EnableBangumi: config.SiteConfig.EnableBangumi ?? true,
       });
     }
   }, [config]);
@@ -3966,6 +3976,67 @@ const SiteConfigComponent = ({ config, refreshConfig }: { config: AdminConfig | 
         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
           启用后搜索结果将实时流式返回，提升用户体验。
         </p>
+      </div>
+
+      {/* 内容生态扩展 */}
+      <div className='space-y-3'>
+        <h3 className='text-sm font-semibold text-gray-800 dark:text-gray-200'>内容生态扩展</h3>
+        {/* YouTube */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用 YouTube</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnableYouTube: !prev.EnableYouTube }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnableYouTube ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableYouTube ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        {/* PanSou */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用网盘搜索（PanSou）</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnablePanSou: !prev.EnablePanSou }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnablePanSou ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnablePanSou ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        {/* ShortDrama */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用短剧</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnableShortDrama: !prev.EnableShortDrama }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnableShortDrama ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableShortDrama ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        {/* IPTV */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用 IPTV 直播</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnableIPTV: !prev.EnableIPTV }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnableIPTV ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableIPTV ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        {/* Bangumi */}
+        <div className='flex items-center justify-between'>
+          <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>启用 Bangumi 动漫</label>
+          <button
+            type='button'
+            onClick={() => setSiteSettings(prev => ({ ...prev, EnableBangumi: !prev.EnableBangumi }))}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${siteSettings.EnableBangumi ? buttonStyles.toggleOn : buttonStyles.toggleOff}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full ${buttonStyles.toggleThumb} transition-transform ${siteSettings.EnableBangumi ? buttonStyles.toggleThumbOn : buttonStyles.toggleThumbOff}`} />
+          </button>
+        </div>
+        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>开启后将在界面与路由层启用对应 Provider（YouTube、网盘、短剧、IPTV、Bangumi）。</p>
       </div>
 
 

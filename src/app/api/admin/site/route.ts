@@ -39,6 +39,11 @@ export async function POST(request: NextRequest) {
       DoubanImageProxy,
       DisableYellowFilter,
       FluidSearch,
+      EnableYouTube,
+      EnablePanSou,
+      EnableShortDrama,
+      EnableIPTV,
+      EnableBangumi,
     } = body as {
       SiteName: string;
       Announcement: string;
@@ -50,6 +55,11 @@ export async function POST(request: NextRequest) {
       DoubanImageProxy: string;
       DisableYellowFilter: boolean;
       FluidSearch: boolean;
+      EnableYouTube?: boolean;
+      EnablePanSou?: boolean;
+      EnableShortDrama?: boolean;
+      EnableIPTV?: boolean;
+      EnableBangumi?: boolean;
     };
 
     // 参数校验
@@ -63,7 +73,12 @@ export async function POST(request: NextRequest) {
       typeof DoubanImageProxyType !== 'string' ||
       typeof DoubanImageProxy !== 'string' ||
       typeof DisableYellowFilter !== 'boolean' ||
-      typeof FluidSearch !== 'boolean'
+      typeof FluidSearch !== 'boolean' ||
+      (EnableYouTube !== undefined && typeof EnableYouTube !== 'boolean') ||
+      (EnablePanSou !== undefined && typeof EnablePanSou !== 'boolean') ||
+      (EnableShortDrama !== undefined && typeof EnableShortDrama !== 'boolean') ||
+      (EnableIPTV !== undefined && typeof EnableIPTV !== 'boolean') ||
+      (EnableBangumi !== undefined && typeof EnableBangumi !== 'boolean')
     ) {
       return NextResponse.json({ error: '参数格式错误' }, { status: 400 });
     }
@@ -93,6 +108,11 @@ export async function POST(request: NextRequest) {
       DoubanImageProxy,
       DisableYellowFilter,
       FluidSearch,
+      EnableYouTube: !!EnableYouTube,
+      EnablePanSou: !!EnablePanSou,
+      EnableShortDrama: !!EnableShortDrama,
+      EnableIPTV: EnableIPTV ?? adminConfig.SiteConfig.EnableIPTV ?? true,
+      EnableBangumi: EnableBangumi ?? adminConfig.SiteConfig.EnableBangumi ?? true,
     };
 
     // 写入数据库
