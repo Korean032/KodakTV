@@ -790,6 +790,7 @@ function SearchPageClient() {
                             episodes={episodes}
                             source_names={source_names}
                             douban_id={douban_id}
+                            remarks={group[0]?.remarks}
                             query={
                               searchQuery.trim() !== title
                                 ? searchQuery.trim()
@@ -813,6 +814,7 @@ function SearchPageClient() {
                           source={item.source}
                           source_name={item.source_name}
                           douban_id={item.douban_id}
+                          remarks={item.remarks}
                           query={
                             searchQuery.trim() !== item.title
                               ? searchQuery.trim()

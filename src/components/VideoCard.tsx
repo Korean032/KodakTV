@@ -54,6 +54,7 @@ export interface VideoCardProps {
   isBangumi?: boolean;
   isAggregate?: boolean;
   origin?: 'vod' | 'live';
+  remarks?: string;
 }
 
 export type VideoCardHandle = {
@@ -84,6 +85,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
       isBangumi = false,
       isAggregate = false,
       origin = 'vod',
+      remarks,
     }: VideoCardProps,
     ref
   ) {
@@ -433,7 +435,13 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
           icon: <PlayCircleIcon size={20} />,
           onClick: handleClick,
           color: 'primary' as const,
-        });
+    });
+
+    const isFinished = useMemo(() => {
+      const r = (remarks || '').toLowerCase();
+      if (!r) return false;
+      return /完结|全\d+集|已完结/.test(r);
+    }, [remarks]);
 
         // 新标签页播放
         actions.push({
@@ -628,10 +636,10 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
               return false;
             }}
           >
-            {/* 骨架屏 */}
-            {!isLoading && <ImagePlaceholder aspectRatio='aspect-[2/3]' />}
-            {/* 图片 */}
-            <Image
+          {/* 骨架屏 */}
+          {!isLoading && <ImagePlaceholder aspectRatio='aspect-[2/3]' />}
+          {/* 图片 */}
+          <Image
               src={processImageUrl(actualPoster)}
               alt={actualTitle}
               fill
@@ -662,11 +670,16 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                 e.preventDefault();
                 return false;
               }}
-              onDragStart={(e) => {
-                e.preventDefault();
-                return false;
-              }}
-            />
+            onDragStart={(e) => {
+              e.preventDefault();
+              return false;
+            }}
+          />
+
+            {/* 完结徽章 */}
+            {isFinished && (
+              <div className='absolute top-2 right-2 z-[5] px-2 py-0.5 rounded-full bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 text-white text-[10px] shadow-md'>完结</div>
+            )}
 
             {/* 悬浮遮罩 */}
             <div

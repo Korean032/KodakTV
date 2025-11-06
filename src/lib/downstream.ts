@@ -114,6 +114,7 @@ async function searchWithCache(
         desc: cleanHtmlTags(item.vod_content || ''),
         type_name: item.type_name,
         douban_id: item.vod_douban_id,
+        remarks: item.vod_remarks,
       };
     });
 

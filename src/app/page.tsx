@@ -26,6 +26,7 @@ import PageLayout from '@/components/PageLayout';
 import ScrollableRow from '@/components/ScrollableRow';
 import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
+import HeroBanner from '@/components/HeroBanner';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<'home' | 'continue' | 'favorites'>(
@@ -248,6 +249,8 @@ function HomeClient() {
           ) : (
             // 首页视图
             <>
+              {/* 英雄横幅：AI推荐和热门合并前几项作为展示 */}
+              <HeroBanner items={(aiRecommendItems||[]).slice(0,5).map((it:any)=>({ title: it.title, cover: it.cover, type: it.type }))} />
               {/* 智能推荐（AI） */}
               {aiRecommendItems.length > 0 && (
                 <section className='mb-8'>
