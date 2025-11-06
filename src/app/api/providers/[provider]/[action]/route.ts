@@ -15,25 +15,32 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
     return NextResponse.json({ error: 'provider_not_found' }, { status: 404 });
   }
   const { searchParams } = new URL(req.url);
+  // Build options from query params
+  const opts: Record<string, any> = {};
+  searchParams.forEach((value, key) => {
+    if (key !== 'q' && key !== 'id') {
+      opts[key] = value;
+    }
+  });
   try {
     switch (action) {
       case 'search': {
         const q = searchParams.get('q') || '';
-        const res = await (p.search?.(q) || Promise.resolve([]));
+        const res = await (p.search?.(q, opts) || Promise.resolve([]));
         return NextResponse.json({ items: res });
       }
       case 'play': {
         const id = searchParams.get('id') || '';
-        const res = await (p.getPlayInfo?.(id) || Promise.resolve({}));
+        const res = await (p.getPlayInfo?.(id, opts) || Promise.resolve({}));
         return NextResponse.json(res);
       }
       case 'live': {
-        const res = await (p.getLiveChannels?.() || Promise.resolve(null));
+        const res = await (p.getLiveChannels?.(opts) || Promise.resolve(null));
         return NextResponse.json(res);
       }
       case 'epg': {
         const channelId = searchParams.get('id') || '';
-        const res = await (p.getEPG?.(channelId) || Promise.resolve({}));
+        const res = await (p.getEPG?.(channelId, opts) || Promise.resolve({}));
         return NextResponse.json(res);
       }
       default:

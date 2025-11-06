@@ -27,6 +27,27 @@ const TmdbProvider: Provider = {
         `${base}/tv/on_the_air?language=${lang}&api_key=${apiKey}`,
       ];
       const results: SearchResultItem[] = [];
+      const now = new Date();
+      const start = new Date(now);
+      const end = new Date(now);
+      if (opts?.week === 'next') {
+        // 下一周范围
+        const day = now.getDay(); // 0-6
+        const daysUntilNextMonday = ((8 - day) % 7) || 7;
+        start.setDate(now.getDate() + daysUntilNextMonday);
+        end.setDate(start.getDate() + 6);
+      } else {
+        // 本周范围（周一至周日）
+        const day = now.getDay(); // 周日=0
+        const diffToMonday = day === 0 ? -6 : 1 - day;
+        start.setDate(now.getDate() + diffToMonday);
+        end.setDate(start.getDate() + 6);
+      }
+      const inRange = (d?: string) => {
+        if (!d) return false;
+        const dt = new Date(d);
+        return dt >= new Date(start.toDateString()) && dt <= new Date(end.toDateString());
+      };
       for (const url of urls) {
         try {
           const data = await fetchJSON(url);
@@ -34,14 +55,19 @@ const TmdbProvider: Provider = {
             const title = m.title || m.name;
             const cover = m.poster_path ? `https://image.tmdb.org/t/p/w300${m.poster_path}` : undefined;
             const year = (m.release_date || m.first_air_date || '').slice(0, 4);
-            results.push({
-              id: String(m.id),
-              title,
-              cover,
-              source_name: 'TMDB',
-              type: m.title ? 'movie' : 'tv',
-              year,
-            });
+            const date = m.release_date || m.first_air_date || '';
+            if (!opts?.week || inRange(date)) {
+              results.push({
+                id: String(m.id),
+                title,
+                cover,
+                source_name: 'TMDB',
+                type: m.title ? 'movie' : 'tv',
+                year,
+                // @ts-expect-error extra field for calendar grouping
+                date,
+              } as any);
+            }
           });
         } catch {
           // ignore

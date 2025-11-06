@@ -385,6 +385,8 @@ NEXT_PUBLIC_ENABLE_PANSOU=true
 NEXT_PUBLIC_ENABLE_SHORTDRAMA=true
 NEXT_PUBLIC_ENABLE_IPTV=true
 NEXT_PUBLIC_ENABLE_BANGUMI=true
+NEXT_PUBLIC_ENABLE_AI=true
+NEXT_PUBLIC_ENABLE_TMDB=true
 
 # YouTube（服务端搜索与无 Cookie 嵌入播放）
 YOUTUBE_API_KEY=xxxx
@@ -400,11 +402,22 @@ MOBILE_PROXY_BASE=https://proxy.example/fetch?url=
 # IPTV（多源 EPG 与台标代理）
 IPTV_EPG_SOURCES=https://epg1.xml,https://epg2.xml
 IPTV_LOGO_PROXY=https://logo-proxy.example/logo?url=
+
+# AI 推荐（OpenAI API）
+OPENAI_API_KEY=sk-xxxx
+AI_MODEL=gpt-4o-mini
+AI_SYSTEM_PROMPT=你是一个影视推荐助手，只返回JSON数组。
+
+# TMDB（演员搜索与发布日历）
+TMDB_API_KEY=xxxx
+TMDB_LANG=zh-CN
+TMDB_REGION=CN
 ```
 
 说明：
 - `NEXT_PUBLIC_ENABLE_*` 为前端开关，控制是否在界面/路由层启用 Provider。
 - 具体 Provider 的实现按需逐步完善；未提供必需变量时将使用占位实现或禁用该 Provider。
+- AI 与 TMDB 需要对应密钥；发布日历支持 `week=this|next` 查询，推荐页支持自定义提示词与类型（movie/youtube/link）。
 
 ## 客户端
 
