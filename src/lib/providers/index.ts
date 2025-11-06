@@ -5,6 +5,8 @@ export type SearchResultItem = {
   year?: string;
   source_name?: string;
   type?: 'movie' | 'tv' | 'short' | 'live' | 'vod';
+  // optional fields for calendar/grouping
+  date?: string;
 };
 
 export interface Provider {

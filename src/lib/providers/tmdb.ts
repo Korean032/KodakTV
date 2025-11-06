@@ -64,9 +64,8 @@ const TmdbProvider: Provider = {
                 source_name: 'TMDB',
                 type: m.title ? 'movie' : 'tv',
                 year,
-                // @ts-expect-error extra field for calendar grouping
                 date,
-              } as any);
+              });
             }
           });
         } catch {
